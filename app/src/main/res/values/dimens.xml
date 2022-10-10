@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_large">32dp</dimen>
+    <dimen name="spacing_extra_small">4dp</dimen>
+    <dimen name="loading_animation_size">200dp</dimen>
+</resources>

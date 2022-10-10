@@ -1,0 +1,83 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Recipe App</string>
+    <string name="home">Home</string>
+
+    <string name="min" tools:ignore="PluralsCandidate">%d Min</string>
+    <string name="metric">metric</string>
+    <string name="us">us</string>
+    <string name="content_description_ingredient">Ingredient</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="content_description_recipe">Recipe</string>
+    <string name="content_description_divider">Divider</string>
+    <string name="content_description_placeholder">Placeholder</string>
+    <string name="saved_recipes">Saved recipes</string>
+    <string name="main_course">main course</string>
+    <string name="marinade">marinade</string>
+    <string name="salad">salad</string>
+    <string name="snack">snack</string>
+    <string name="sauce">sauce</string>
+    <string name="soup">soup</string>
+    <string name="bread">bread</string>
+    <string name="fingerfood">fingerfood</string>
+    <string name="dessert">dessert</string>
+    <string name="appetizer">appetizer</string>
+    <string name="side_dish">side dish</string>
+    <string name="breakfast">breakfast</string>
+    <string name="beverage">beverage</string>
+    <string name="drink">drink</string>
+    <string name="other">other</string>
+    <string name="lunch">lunch</string>
+    <string name="dinner">dinner</string>
+    <string name="instructions">Instructions</string>
+    <string name="vegetarian">vegetarian</string>
+    <string name="search">Search</string>
+    <string name="save">Save</string>
+    <string name="saved">Saved</string>
+    <string name="source_page">Source page</string>
+    <string name="content_description_time">time</string>
+    <string name="content_description_servings">servings</string>
+    <string name="content_description_vegetarian">vegetarian</string>
+    <string name="content_description_meal_type">meal type</string>
+    <string name="loading_message">We are working on your request. Just a moment.</string>
+    <string name="loading_random_recipes">We are picking recipes for you.</string>
+    <string name="error_message">Something went wrong.</string>
+    <string name="message_empty_saved_recipes">No saved recipes yet.</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="copied">Copied</string>
+    <string name="cannot_open_browser">Cannot open a browser</string>
+    <string name="try_again">Try again</string>
+    <string name="something_went_wrong">Something went wrong.</string>
+    <string name="search_recipes">Search recipes</string>
+    <string name="retry">Retry</string>
+    <string name="loading_error_message">Cannot load data. Check your internet connection and try again.</string>
+    <string name="search_empty_message">No results for search.</string>
+    <string name="random_recipe_list_title">Recipes to try for today</string>
+    <string name="incorrect_query_toast">Search query cannot be empty or blank.</string>
+    <string name="content_description_navigate_up">Navigate up</string>
+    <string name="content_description_clear_text">Clear text</string>
+
+
+    <plurals name="plural_ingredients">
+        <item quantity="zero">%d ingredients</item>
+        <item quantity="one">%d ingredient</item>
+        <item quantity="two">%d ingredients</item>
+        <item quantity="few">%d ingredients</item>
+        <item quantity="many">%d ingredients</item>
+        <item quantity="other">%d ingredients</item>
+    </plurals>
+
+    <plurals name="plural_servings">
+        <item quantity="zero">%d servings</item>
+        <item quantity="one">%d serving</item>
+        <item quantity="two">%d servings</item>
+        <item quantity="few">%d servings</item>
+        <item quantity="many">%d servings</item>
+        <item quantity="other">%d servings</item>
+    </plurals>
+
+    <string-array name="measure_system">
+        <item>@string/metric</item>
+        <item>@string/us</item>
+    </string-array>
+</resources>

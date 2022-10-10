@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.MaterialToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/spacing_small"
+    app:navigationContentDescription="@string/content_description_navigate_up"
+    app:navigationIcon="@drawable/ic_arrow_back"
+    tools:showIn="@layout/fragment_search">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_container"
+        style="@style/Widget.App.TextInputLayout.Search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        app:endIconContentDescription="@string/content_description_clear_text"
+        app:endIconMode="clear_text"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.yuriikonovalov.recipeapp.util.TextInputEditTextClearFocus
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_recipes"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:lines="1"
+            android:padding="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+</com.google.android.material.appbar.MaterialToolbar>

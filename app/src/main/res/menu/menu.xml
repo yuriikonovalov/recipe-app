@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.yuriikonovalov.recipeapp.MainActivity">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/homeNavGraph"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/savedRecipesNavGraph"
+            android:icon="@drawable/ic_bookmark"
+            android:title="@string/saved_recipes" />
+    </group>
+</menu>

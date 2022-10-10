@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.App.CheckableCardView" parent="Widget.Material3.CardView.Filled">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckableCardView</item>
+        <item name="checkedIcon">@null</item>
+        <item name="cardBackgroundColor">@color/checkable_card_foreground_color</item>
+    </style>
+
+    <style name="ThemeOverlay.App.CheckableCardView" parent="Theme.RecipeApp">
+        <item name="colorSecondary">?attr/colorSurfaceVariant</item>
+    </style>
+
+
+    <style name="Widget.App.TextInputLayout.Search" parent="Widget.Material3.TextInputLayout.FilledBox.Dense">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Full</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/container"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/spacing_small">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/middle_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/image"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@id/middle_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+        tools:background="#FFF9C4" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/save_button"
+        app:layout_constraintStart_toEndOf="@id/middle_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Spring Salad" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/save_button"
+        style="@style/Widget.Material3.Button.TonalButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        app:layout_constraintBaseline_toBaselineOf="@id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:icon="@drawable/ic_bookmark"
+        tools:text="Like" />
+
+    <ImageView
+        android:id="@+id/meal_types_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:contentDescription="@string/content_description_meal_type"
+        app:layout_constraintStart_toEndOf="@id/middle_vertical"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:srcCompat="@drawable/ic_label" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/meal_types"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_small"
+        app:layout_constraintBottom_toBottomOf="@id/meal_types_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/meal_types_icon"
+        app:layout_constraintTop_toTopOf="@id/meal_types_icon"
+        tools:text="snack, dinner" />
+
+    <ImageView
+        android:id="@+id/vegetarian_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:contentDescription="@string/content_description_vegetarian"
+        app:layout_constraintStart_toEndOf="@id/middle_vertical"
+        app:layout_constraintTop_toBottomOf="@id/meal_types"
+        app:srcCompat="@drawable/ic_vegetarian_mark" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/vegetarian"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_small"
+        android:text="@string/vegetarian"
+        app:layout_constraintBottom_toBottomOf="@id/vegetarian_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/vegetarian_icon"
+        app:layout_constraintTop_toTopOf="@id/vegetarian_icon" />
+
+    <ImageView
+        android:id="@+id/servings_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginHorizontal="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:contentDescription="@string/content_description_servings"
+        app:layout_constraintStart_toEndOf="@id/middle_vertical"
+        app:layout_constraintTop_toBottomOf="@id/vegetarian"
+        app:srcCompat="@drawable/ic_servings" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/servings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_small"
+        app:layout_constraintBottom_toBottomOf="@id/servings_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/servings_icon"
+        app:layout_constraintTop_toTopOf="@id/servings_icon"
+        tools:text="3 servings" />
+
+    <ImageView
+        android:id="@+id/time_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginHorizontal="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:contentDescription="@string/content_description_time"
+        app:layout_constraintStart_toEndOf="@id/middle_vertical"
+        app:layout_constraintTop_toBottomOf="@id/servings_icon"
+        app:srcCompat="@drawable/ic_timer" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_small"
+        app:layout_constraintBottom_toBottomOf="@id/time_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/time_icon"
+        app:layout_constraintTop_toTopOf="@id/time_icon"
+        tools:text="40 Min" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/ingredients_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="@string/ingredients"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/middle_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image" />
+
+    <Spinner
+        android:id="@+id/measure_system_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/measure_system"
+        app:layout_constraintBaseline_toBaselineOf="@id/ingredients_label"
+        app:layout_constraintEnd_toStartOf="@id/middle_vertical" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ingredients"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        app:layout_constraintEnd_toStartOf="@id/middle_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ingredients_label"
+        tools:itemCount="6"
+        tools:listitem="@layout/item_ingredient_adapter" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/instructions_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_normal"
+        android:text="@string/instructions"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/middle_vertical"
+        app:layout_constraintTop_toBottomOf="@id/instructions_barrier" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/instructions_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="image, time_icon,servings_icon,vegetarian_icon" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/source_button"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/source_page"
+        app:layout_constraintBaseline_toBaselineOf="@id/instructions_label"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:paddingBottom="@dimen/spacing_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/middle_vertical"
+        app:layout_constraintTop_toBottomOf="@id/instructions_label"
+        tools:text="@tools:sample/lorem/random" />
+</androidx.constraintlayout.widget.ConstraintLayout>
