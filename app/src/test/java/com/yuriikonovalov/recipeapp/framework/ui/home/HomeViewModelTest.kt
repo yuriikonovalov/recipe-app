@@ -5,6 +5,7 @@ import com.yuriikonovalov.recipeapp.application.usecases.GetRandomRecipesUseCase
 import com.yuriikonovalov.recipeapp.application.usecases.UpdateRandomRecipesUseCase
 import com.yuriikonovalov.recipeapp.data.local.DateProvider
 import com.yuriikonovalov.recipeapp.framework.ui.BaseViewModelTest
+import com.yuriikonovalov.recipeapp.util.EspressoIdlingResource
 import com.yuriikonovalov.recipeapp.util.FakeRandomRecipeMapperUi
 import com.yuriikonovalov.recipeapp.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,6 +19,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
@@ -31,15 +33,18 @@ class HomeViewModelTest : BaseViewModelTest() {
     lateinit var dateProvider: DateProvider
     private lateinit var sut: HomeViewModel
 
+
     @Before
     fun setup() {
         super.setupBase()
         remoteDataSourceAsFake
+        val mockEspressoIdlingResource = mock<EspressoIdlingResource>()
         sut = HomeViewModel(
             GetRandomRecipesUseCase(repository),
             UpdateRandomRecipesUseCase(repository, dateProvider),
             FakeRandomRecipeMapperUi,
-            mainDispatcherRule.testDispatcherProvider
+            mainDispatcherRule.testDispatcherProvider,
+            mockEspressoIdlingResource
         )
     }
 
