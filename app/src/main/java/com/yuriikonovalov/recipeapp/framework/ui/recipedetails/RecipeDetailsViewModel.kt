@@ -45,7 +45,6 @@ class RecipeDetailsViewModel @AssistedInject constructor(
     }
 
     fun onSaveButtonClick() {
-//        EspressoIdlingResource.increment()
         espressoIdlingResource.increment()
         viewModelScope.launch(dispatcherProvider.main) {
             // No need for checking for null as this method can only be invoked when a recipe is selected.
@@ -75,7 +74,6 @@ class RecipeDetailsViewModel @AssistedInject constructor(
     }
 
     fun loadRecipeDetails(id: Int) {
-//        EspressoIdlingResource.increment()
         espressoIdlingResource.increment()
         _stateFlow.update { it.updateLoading(true) }
         viewModelScope.launch(dispatcherProvider.main) {
@@ -88,7 +86,6 @@ class RecipeDetailsViewModel @AssistedInject constructor(
                 resource.onFailure {
                     _stateFlow.update { it.updateError(true) }
                 }
-//                EspressoIdlingResource.decrement()
                 espressoIdlingResource.decrement()
             }
         }

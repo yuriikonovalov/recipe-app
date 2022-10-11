@@ -111,9 +111,6 @@ dependencies {
     // Image loading - Coil
     implementation "io.coil-kt:coil:2.2.1"
 
-    // FlexBox
-    implementation "com.google.android.flexbox:flexbox:3.0.0"
-
     // Sliding Pane Layout
     implementation "androidx.slidingpanelayout:slidingpanelayout:1.2.0"
 

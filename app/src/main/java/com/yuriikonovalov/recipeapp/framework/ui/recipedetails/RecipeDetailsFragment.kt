@@ -70,7 +70,6 @@ class RecipeDetailsFragment : Fragment() {
 
     private fun FragmentRecipeDetailsBinding.bindLoadingView() {
         collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::loading) { loading ->
-            Log.d("FragmentRecipeDetailsBinding", "loading: $loading")
             loadingView.root.isVisible = loading
         }
     }
@@ -78,7 +77,6 @@ class RecipeDetailsFragment : Fragment() {
     private fun FragmentRecipeDetailsBinding.bindErrorView() {
         errorView.retryButton.setOnClickListener { viewModel.onRetryButtonClick(args.recipeId) }
         collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::error) { error ->
-            Log.d("FragmentRecipeDetailsBinding", "error: $error")
             errorView.root.isVisible = error
         }
     }
@@ -89,7 +87,6 @@ class RecipeDetailsFragment : Fragment() {
         bindIngredientList()
 
         collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::contentVisible) {
-            Log.d("FragmentRecipeDetailsBinding", "content visible: $it")
             content.root.isVisible = it
         }
         collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::recipe) { recipe ->
