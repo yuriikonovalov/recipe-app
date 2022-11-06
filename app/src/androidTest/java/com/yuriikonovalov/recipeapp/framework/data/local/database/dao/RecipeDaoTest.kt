@@ -87,7 +87,7 @@ class RecipeDaoTest {
         val expected = mapper.mapFromDomain(recipe())
 
         // WHEN
-        // Inserting ingredient without a recipe entity will cause exception.
+        // Inserting ingredients without a recipe entity will cause exception.
         sut.insertIngredients(expected.ingredients)
     }
 

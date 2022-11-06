@@ -3,20 +3,29 @@ package com.yuriikonovalov.recipeapp.framework.ui.search
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
+import com.jakewharton.espresso.OkHttp3IdlingResource
 import com.yuriikonovalov.recipeapp.R
 import com.yuriikonovalov.recipeapp.data.local.RecipeLocalDataSource
 import com.yuriikonovalov.recipeapp.data.remote.RecipeRemoteDataSource
-import com.yuriikonovalov.recipeapp.fakes.searchRecipes
-import com.yuriikonovalov.recipeapp.util.asFake
+import com.yuriikonovalov.recipeapp.util.Request
 import com.yuriikonovalov.recipeapp.util.launchFragmentInHiltContainer
+import com.yuriikonovalov.recipeapp.util.readSearchRecipeResponseFromJson
+import com.yuriikonovalov.recipeapp.util.readStringFromFile
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import okhttp3.OkHttpClient
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matchers.not
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,9 +46,24 @@ class SearchFragmentTest {
     @Inject
     lateinit var remoteSource: RecipeRemoteDataSource
 
+    @Inject
+    lateinit var okHttpClient: OkHttpClient
+
+    private val server = MockWebServer()
+    private lateinit var okHttpIdlingResource: OkHttp3IdlingResource
+
     @Before
     fun setup() {
         hiltRule.inject()
+        okHttpIdlingResource = OkHttp3IdlingResource.create("okhttp", okHttpClient)
+        IdlingRegistry.getInstance().register(okHttpIdlingResource)
+        server.start(8080)
+    }
+
+    @After
+    fun teardown() {
+        server.shutdown()
+        IdlingRegistry.getInstance().unregister(okHttpIdlingResource)
     }
 
     @Test
@@ -110,29 +134,14 @@ class SearchFragmentTest {
     }
 
     @Test
-    fun clickSearchButton_loadingViewDisplayed() {
-        // BEFORE
-        // Set fake loading time as 1 second.
-        remoteSource.asFake().delay = 1000
-
-        launchFragmentInHiltContainer<SearchFragment>()
-
-        // WHEN
-        // Input a query and press the ime search button.
-        onView(withId(R.id.search))
-            .check(matches(isDisplayed()))
-            .perform(click(), typeText("pizza"), pressImeActionButton())
-
-        // THEN
-        onView(withId(R.id.loading_view))
-            .check(matches(isDisplayed()))
-    }
-
-    @Test
     fun thrownExceptionDuringLoading_errorViewDisplayed() {
         // BEFORE
-        // Set fake remote source to throw an exception.
-        remoteSource.asFake().shouldThrowException(true)
+        server.dispatcher = object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse()
+                    .setResponseCode(400)
+            }
+        }
 
         launchFragmentInHiltContainer<SearchFragment>()
 
@@ -150,8 +159,13 @@ class SearchFragmentTest {
     @Test
     fun successResponse_listOfResultsDisplayed() {
         // BEFORE
-        // Set a fake response.
-        remoteSource.asFake().searchRecipes = searchRecipes(10, "pizza")
+        server.dispatcher = object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse()
+                    .setResponseCode(200)
+                    .setBody(readStringFromFile(Request.SearchRecipes.FILE))
+            }
+        }
         launchFragmentInHiltContainer<SearchFragment>()
 
         // WHEN
@@ -174,8 +188,13 @@ class SearchFragmentTest {
     @Test
     fun emptyResponse_showNoResultsMessage() {
         // BEFORE
-        // Set a fake response.
-        remoteSource.asFake().searchRecipes = emptyList()
+        server.dispatcher = object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse()
+                    .setResponseCode(200)
+                    .setBody(readStringFromFile(Request.SearchRecipesEmpty.FILE))
+            }
+        }
         launchFragmentInHiltContainer<SearchFragment>()
 
         // WHEN
@@ -190,11 +209,18 @@ class SearchFragmentTest {
             .check(matches(isDisplayed()))
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun clickOnListItem_navigateToRecipeDetailsFragment() {
         // BEFORE
-        val recipes = searchRecipes(10, "pizza")
-        remoteSource.asFake().searchRecipes = recipes
+        server.dispatcher = object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse()
+                    .setResponseCode(200)
+                    .setBody(readStringFromFile(Request.SearchRecipes.FILE))
+            }
+        }
+        val recipes = readSearchRecipeResponseFromJson(Request.SearchRecipes.FILE)!!
         val navController = mock<NavController>()
         launchFragmentInHiltContainer<SearchFragment> {
             Navigation.setViewNavController(requireView(), navController)

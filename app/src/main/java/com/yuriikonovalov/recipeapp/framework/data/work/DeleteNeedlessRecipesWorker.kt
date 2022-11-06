@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.yuriikonovalov.recipeapp.application.usecases.DeleteNeedlessRecipesUseCase
+import com.yuriikonovalov.recipeapp.application.usecases.DeleteNeedlessRecipes
+import com.yuriikonovalov.recipeapp.application.usecases.DeleteNeedlessRecipesImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -12,11 +13,11 @@ import dagger.assisted.AssistedInject
 class DeleteNeedlessRecipesWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val deleteNeedlessRecipesUseCase: DeleteNeedlessRecipesUseCase
+    private val deleteNeedlessRecipes: DeleteNeedlessRecipes
 ) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result {
         return try {
-            deleteNeedlessRecipesUseCase()
+            deleteNeedlessRecipes()
             Result.success()
         } catch (e: Exception) {
             Result.failure()

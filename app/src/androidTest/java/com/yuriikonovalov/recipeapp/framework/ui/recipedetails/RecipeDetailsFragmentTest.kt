@@ -14,7 +14,6 @@ import com.yuriikonovalov.recipeapp.data.local.RecipeLocalDataSource
 import com.yuriikonovalov.recipeapp.data.remote.RecipeRemoteDataSource
 import com.yuriikonovalov.recipeapp.fakes.recipe
 import com.yuriikonovalov.recipeapp.util.EspressoIdlingResource
-import com.yuriikonovalov.recipeapp.util.asFake
 import com.yuriikonovalov.recipeapp.util.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -35,9 +34,6 @@ class RecipeDetailsFragmentTest {
     val hiltAndroidRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var remoteSource: RecipeRemoteDataSource
-
-    @Inject
     lateinit var localSource: RecipeLocalDataSource
 
     @Inject
@@ -55,10 +51,10 @@ class RecipeDetailsFragmentTest {
     }
 
     @Test
-    fun recipeIsSaved_saveButtonHasCorrectText() {
+    fun recipeIsSaved_saveButtonHasCorrectText() = runTest {
         // BEFORE
-        val recipe = recipe(saved = true)
-        remoteSource.asFake().recipe = recipe
+        val recipe = recipe(saved = true, cache = true)
+        localSource.insertRecipe(recipe)
 
         // WHEN
         launchFragmentInHiltContainer<RecipeDetailsFragment>(
@@ -72,10 +68,10 @@ class RecipeDetailsFragmentTest {
     }
 
     @Test
-    fun recipeIsNotSaved_saveButtonHasCorrectText() {
+    fun recipeIsNotSaved_saveButtonHasCorrectText() = runTest {
         // BEFORE
-        val recipe = recipe(saved = false)
-        remoteSource.asFake().recipe = recipe
+        val recipe = recipe(saved = false, cache = true)
+        localSource.insertRecipe(recipe)
 
         // WHEN
         launchFragmentInHiltContainer<RecipeDetailsFragment>(
@@ -108,10 +104,10 @@ class RecipeDetailsFragmentTest {
     }
 
     @Test
-    fun sourcePageUrl_sourceButtonDisplayed() {
+    fun sourcePageUrl_sourceButtonDisplayed() = runTest {
         // BEFORE
         val recipe = recipe().copy(sourceUrl = "www.source.com")
-        remoteSource.asFake().recipe = recipe
+        localSource.insertRecipe(recipe)
 
         // WHEN
         launchFragmentInHiltContainer<RecipeDetailsFragment>(
@@ -126,10 +122,10 @@ class RecipeDetailsFragmentTest {
     }
 
     @Test
-    fun changeMeasureSystem() {
+    fun changeMeasureSystem() = runTest {
         // BEFORE
         val recipe = recipe().copy(sourceUrl = "www.source.com")
-        remoteSource.asFake().recipe = recipe
+        localSource.insertRecipe(recipe)
 
         // WHEN
         launchFragmentInHiltContainer<RecipeDetailsFragment>(

@@ -23,6 +23,8 @@ import com.yuriikonovalov.recipeapp.presentation.model.*
 import com.yuriikonovalov.recipeapp.presentation.recipedetails.*
 import com.yuriikonovalov.recipeapp.util.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -69,15 +71,23 @@ class RecipeDetailsFragment : Fragment() {
     }
 
     private fun FragmentRecipeDetailsBinding.bindLoadingView() {
-        collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::loading) { loading ->
-            loadingView.root.isVisible = loading
+        launchSafely {
+            viewModel.stateFlow.map { it.loading }
+                .distinctUntilChanged()
+                .collect {
+                    loadingView.root.isVisible = it
+                }
         }
     }
 
     private fun FragmentRecipeDetailsBinding.bindErrorView() {
         errorView.retryButton.setOnClickListener { viewModel.onRetryButtonClick(args.recipeId) }
-        collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::error) { error ->
-            errorView.root.isVisible = error
+        launchSafely {
+            viewModel.stateFlow.map { it.error }
+                .distinctUntilChanged()
+                .collect {
+                    errorView.root.isVisible = it
+                }
         }
     }
 
@@ -85,47 +95,54 @@ class RecipeDetailsFragment : Fragment() {
         bindButtons()
         bindMeasureSystemSpinner()
         bindIngredientList()
-
-        collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::contentVisible) {
-            content.root.isVisible = it
-        }
-        collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::recipe) { recipe ->
-            recipe?.let { recipeUi ->
-                content.title.text = recipeUi.title
-                content.image.load(recipeUi.image) {
-                    crossfade(100)
-                    error(R.drawable.placeholder_meal)
-                    placeholder(R.drawable.placeholder_meal)
+        launchSafely {
+            viewModel.stateFlow.map { it.contentVisible }
+                .distinctUntilChanged()
+                .collect {
+                    content.root.isVisible = it
                 }
-                content.vegetarian.isVisible = recipeUi.vegetarian
-                content.vegetarianIcon.isVisible = recipeUi.vegetarian
+        }
+        launchSafely {
+            viewModel.stateFlow.map { it.recipe }
+                .distinctUntilChanged()
+                .collect { recipe ->
+                    recipe?.let { recipeUi ->
+                        content.title.text = recipeUi.title
+                        content.image.load(recipeUi.image) {
+                            crossfade(100)
+                            error(R.drawable.placeholder_meal)
+                            placeholder(R.drawable.placeholder_meal)
+                        }
+                        content.vegetarian.isVisible = recipeUi.vegetarian
+                        content.vegetarianIcon.isVisible = recipeUi.vegetarian
 
-                content.instructionsLabel.isVisible = recipeUi.instructionsVisible
-                content.instructions.isVisible = recipeUi.instructionsVisible
-                content.instructions.text = recipeUi.instructions
+                        content.instructionsLabel.isVisible = recipeUi.instructionsVisible
+                        content.instructions.isVisible = recipeUi.instructionsVisible
+                        content.instructions.text = recipeUi.instructions
 
-                content.time.isVisible = recipeUi.timeVisible
-                content.timeIcon.isVisible = recipeUi.timeVisible
-                content.time.text = recipeUi.time
+                        content.time.isVisible = recipeUi.timeVisible
+                        content.timeIcon.isVisible = recipeUi.timeVisible
+                        content.time.text = recipeUi.time
 
-                content.servings.isVisible = recipeUi.servingsVisible
-                content.servingsIcon.isVisible = recipeUi.servingsVisible
-                content.servings.text = recipeUi.servings
+                        content.servings.isVisible = recipeUi.servingsVisible
+                        content.servingsIcon.isVisible = recipeUi.servingsVisible
+                        content.servings.text = recipeUi.servings
 
-                content.mealTypes.isVisible = recipeUi.mealTypeVisible
-                content.mealTypesIcon.isVisible = recipeUi.mealTypeVisible
-                content.mealTypes.text = recipeUi.mealTypes
+                        content.mealTypes.isVisible = recipeUi.mealTypeVisible
+                        content.mealTypesIcon.isVisible = recipeUi.mealTypeVisible
+                        content.mealTypes.text = recipeUi.mealTypes
 
-                binding.content.ingredients.isVisible = recipeUi.ingredientsVisible
-                binding.content.ingredientsLabel.isVisible = recipeUi.ingredientsVisible
-                ingredientAdapter.submitList(recipeUi.ingredients)
+                        binding.content.ingredients.isVisible = recipeUi.ingredientsVisible
+                        binding.content.ingredientsLabel.isVisible = recipeUi.ingredientsVisible
+                        ingredientAdapter.submitList(recipeUi.ingredients)
 
-                content.measureSystemSpinner.isVisible = recipeUi.measureSpinnerVisible
-                content.sourceButton.isVisible = recipeUi.sourceButtonVisible
+                        content.measureSystemSpinner.isVisible = recipeUi.measureSpinnerVisible
+                        content.sourceButton.isVisible = recipeUi.sourceButtonVisible
 
-                content.saveButton.setIconResource(recipeUi.saved.asSavedIconRes())
-                content.saveButton.setText(recipeUi.saved.asSavedStringRes())
-            }
+                        content.saveButton.setIconResource(recipeUi.saved.asSavedIconRes())
+                        content.saveButton.setText(recipeUi.saved.asSavedStringRes())
+                    }
+                }
         }
     }
 
@@ -160,8 +177,12 @@ class RecipeDetailsFragment : Fragment() {
     private fun FragmentRecipeDetailsBinding.bindIngredientList() {
         content.ingredients.layoutManager = LinearLayoutManager(requireContext())
         content.ingredients.adapter = ingredientAdapter
-        collectDistinctStateProperty(viewModel.stateFlow, RecipeDetailsState::measureSystem) {
-            ingredientAdapter.measureSystem = it
+        launchSafely {
+            viewModel.stateFlow.map { it.measureSystem }
+                .distinctUntilChanged()
+                .collect {
+                    ingredientAdapter.measureSystem = it
+                }
         }
     }
 

@@ -5,16 +5,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.yuriikonovalov.recipeapp.application.entities.MeasureSystem
 import com.yuriikonovalov.recipeapp.application.entities.Recipe
-import com.yuriikonovalov.recipeapp.application.usecases.GetRecipeDetailsUseCase
-import com.yuriikonovalov.recipeapp.application.usecases.SaveRecipeUseCase
-import com.yuriikonovalov.recipeapp.application.usecases.UnsaveRecipeUseCase
+import com.yuriikonovalov.recipeapp.application.usecases.*
 import com.yuriikonovalov.recipeapp.presentation.MapperUi
 import com.yuriikonovalov.recipeapp.presentation.model.RecipeUi
 import com.yuriikonovalov.recipeapp.presentation.recipedetails.RecipeDetailsEvent
 import com.yuriikonovalov.recipeapp.presentation.recipedetails.RecipeDetailsState
 import com.yuriikonovalov.recipeapp.resource.onFailure
 import com.yuriikonovalov.recipeapp.resource.onSuccess
-import com.yuriikonovalov.recipeapp.util.DispatcherProvider
 import com.yuriikonovalov.recipeapp.util.EspressoIdlingResource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -26,10 +23,9 @@ import kotlinx.coroutines.launch
 
 class RecipeDetailsViewModel @AssistedInject constructor(
     @Assisted private val recipeId: Int,
-    private val saveRecipe: SaveRecipeUseCase,
-    private val unsaveRecipe: UnsaveRecipeUseCase,
-    private val getRecipeDetails: GetRecipeDetailsUseCase,
-    private val dispatcherProvider: DispatcherProvider,
+    private val saveRecipe: SaveRecipe,
+    private val unsaveRecipe: UnsaveRecipe,
+    private val getRecipeDetails: GetRecipeDetails,
     private val recipeMapper: MapperUi<Recipe, RecipeUi>,
     private val espressoIdlingResource: EspressoIdlingResource
 ) : ViewModel() {
@@ -46,7 +42,7 @@ class RecipeDetailsViewModel @AssistedInject constructor(
 
     fun onSaveButtonClick() {
         espressoIdlingResource.increment()
-        viewModelScope.launch(dispatcherProvider.main) {
+        viewModelScope.launch {
             // No need for checking for null as this method can only be invoked when a recipe is selected.
             val id = currentState.recipe!!.id
             if (currentState.recipe!!.saved) {
@@ -73,10 +69,10 @@ class RecipeDetailsViewModel @AssistedInject constructor(
         _stateFlow.update { it.updateMeasureSystem(measureSystem) }
     }
 
-    fun loadRecipeDetails(id: Int) {
+    private fun loadRecipeDetails(id: Int) {
         espressoIdlingResource.increment()
         _stateFlow.update { it.updateLoading(true) }
-        viewModelScope.launch(dispatcherProvider.main) {
+        viewModelScope.launch {
             getRecipeDetails(id).collect { resource ->
                 _stateFlow.update { it.updateLoading(false) }
                 resource.onSuccess { recipe ->

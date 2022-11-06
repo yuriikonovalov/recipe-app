@@ -19,9 +19,8 @@ private fun defaultCombinedLoadStates() = CombinedLoadStates(
 
 data class SearchState(
     val query: String = "",
-    val searchSuggestions: List<SearchRecipe> = emptyList(),
     val combinedLoadStates: CombinedLoadStates = defaultCombinedLoadStates(),
-    val resultItemCount: Int = 0,
+    val resultItemCount: Int = 0
 ) {
     private val isSearchResultEmpty: Boolean
         get() = combinedLoadStates.refresh is LoadState.NotLoading && resultItemCount == 0

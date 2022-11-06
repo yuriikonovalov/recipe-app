@@ -1,66 +1,66 @@
 package com.yuriikonovalov.recipeapp.framework.ui.savedrecipes
 
 import com.google.common.truth.Truth.assertThat
-import com.yuriikonovalov.recipeapp.application.usecases.GetSavedRecipesUseCase
-import com.yuriikonovalov.recipeapp.application.usecases.UnsaveRecipeUseCase
-import com.yuriikonovalov.recipeapp.framework.ui.BaseViewModelTest
+import com.yuriikonovalov.recipeapp.application.usecases.GetSavedRecipes
+import com.yuriikonovalov.recipeapp.application.usecases.UnsaveRecipe
+import com.yuriikonovalov.recipeapp.fake.mapper.FakeRecipeMapperUi
+import com.yuriikonovalov.recipeapp.fake.usecase.FakeGetSavedRecipes
+import com.yuriikonovalov.recipeapp.fake.usecase.FakeUnsaveRecipe
 import com.yuriikonovalov.recipeapp.presentation.savedrecipes.SavedRecipesEvent
 import com.yuriikonovalov.recipeapp.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 
 @ExperimentalCoroutinesApi
-@RunWith(JUnit4::class)
-class SavedRecipesViewModelTest : BaseViewModelTest() {
+class SavedRecipesViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
-    private lateinit var sut: SavedRecipesViewModel
 
-    @Before
-    fun setup() {
-        super.setupBase()
-        sut = SavedRecipesViewModel(
-            GetSavedRecipesUseCase(repository),
-            UnsaveRecipeUseCase(repository),
-            mainDispatcherRule.testDispatcherProvider,
-            FakeRecipeMapperUi
-        )
-    }
+    private fun initSUT(
+        getSavedRecipes: GetSavedRecipes = FakeGetSavedRecipes(),
+        unsaveRecipe: UnsaveRecipe = FakeUnsaveRecipe()
+    ) = SavedRecipesViewModel(getSavedRecipes, unsaveRecipe, FakeRecipeMapperUi)
+
 
     @Test
-    fun onClickBackButtonWhenWindowSizeExpanded_shouldNavigateUp() {
+    fun `if click the back button when windowSize is Expanded - event value should be NavigateUp`() {
         // BEFORE
+        val sut = initSUT()
+        val expected = SavedRecipesEvent.NavigateUp
         sut.onUpdateWindowSizeClass(WindowSizeClass.EXPANDED)
 
         // WHEN
         sut.onClickBackButton()
 
         // THEN
-        assertThat(sut.eventFlow.value).isEqualTo(SavedRecipesEvent.NavigateUp)
+        val actual = sut.eventFlow.value
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun onClickBackButtonWhenWindowSizeIsNotExpandedAndPaneNotOpen_shouldNavigateUp() {
+    fun `if click the back button when windowSize is not Expanded and pane is not open - event value should be NavigateUp`() {
         // BEFORE
+        val sut = initSUT()
+        val expected = SavedRecipesEvent.NavigateUp
         sut.onUpdateWindowSizeClass(WindowSizeClass.COMPACT)
 
         // WHEN
         sut.onClickBackButton()
 
         // THEN
-        assertThat(sut.eventFlow.value).isEqualTo(SavedRecipesEvent.NavigateUp)
+        val actual = sut.eventFlow.value
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun onClickBackButtonWhenWindowSizeIsNotExpandedAndPaneIsOpen_shouldClosePane() {
+    fun `if click the back button when windowSize is not Expanded and pane is open - event value should be CloseDetailsPane`() {
         // BEFORE
+        val sut = initSUT()
+        val expected = SavedRecipesEvent.CloseDetailsPane
         sut.onUpdateWindowSizeClass(WindowSizeClass.COMPACT)
         sut.onUpdatePaneState(true)
 
@@ -68,23 +68,27 @@ class SavedRecipesViewModelTest : BaseViewModelTest() {
         sut.onClickBackButton()
 
         // THEN
-        assertThat(sut.eventFlow.value).isEqualTo(SavedRecipesEvent.CloseDetailsPane)
+        val actual = sut.eventFlow.value
+        assertThat(actual).isEqualTo(expected)
     }
 
 
     @Test
-    fun onSaveButtonClickOnLastItem_shouldUnsaveRecipeAndClosePane() = runTest {
-        // BEFORE
-        val recipe = recipe(saved = true)
-        localDataSource.insertRecipe(recipe)
-        sut.onUpdateWindowSizeClass(WindowSizeClass.COMPACT)
-        sut.onSelectRecipe(recipe.recipeUi())
+    fun `if click a save button on the last item - event value should CloseDetailsPane`() =
+        runTest {
+            // BEFORE
+            val recipe = recipe(saved = true)
+            val sut = initSUT(getSavedRecipes = FakeGetSavedRecipes(listOf(recipe)))
+            val expected = SavedRecipesEvent.CloseDetailsPane
+            sut.onUpdateWindowSizeClass(WindowSizeClass.COMPACT)
+            sut.onSelectRecipe(recipe.recipeUi())
 
-        // WHEN
-        sut.onSaveButtonClick()
+            // WHEN
+            sut.onSaveButtonClick()
+            advanceUntilIdle()
 
-        // THEN
-        assertThat(sut.eventFlow.value).isEqualTo(SavedRecipesEvent.CloseDetailsPane)
-        assertThat(repository.getSavedRecipes().first()).isEmpty()
-    }
+            // THEN
+            val actual = sut.eventFlow.value
+            assertThat(actual).isEqualTo(expected)
+        }
 }

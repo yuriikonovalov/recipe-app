@@ -1,7 +1,9 @@
 package com.yuriikonovalov.recipeapp.framework.ui.search
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -18,11 +20,12 @@ import com.yuriikonovalov.recipeapp.R
 import com.yuriikonovalov.recipeapp.application.entities.SearchRecipe
 import com.yuriikonovalov.recipeapp.databinding.FragmentSearchBinding
 import com.yuriikonovalov.recipeapp.presentation.search.SearchEvent
-import com.yuriikonovalov.recipeapp.presentation.search.SearchState
 import com.yuriikonovalov.recipeapp.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -78,9 +81,12 @@ class SearchFragment : Fragment() {
 
         searchRecipeAdapter.submitPagingData(viewModel.pagingData)
         searchRecipeAdapter.doOnStateChanged(viewModel::updateCombinedLoadState)
-
-        collectDistinctStateProperty(viewModel.stateFlow, SearchState::searchRecipeListVisible) {
-            searchRecipes.isVisible = it
+        launchSafely {
+            viewModel.stateFlow.map { it.searchRecipeListVisible }
+                .distinctUntilChanged()
+                .collect {
+                    searchRecipes.isVisible = it
+                }
         }
     }
 
@@ -101,21 +107,33 @@ class SearchFragment : Fragment() {
     }
 
     private fun FragmentSearchBinding.bindLoadingView() {
-        collectDistinctStateProperty(viewModel.stateFlow, SearchState::loadingViewVisible) {
-            loadingView.root.isVisible = it
+        launchSafely {
+            viewModel.stateFlow.map { it.loadingViewVisible }
+                .distinctUntilChanged()
+                .collect {
+                    loadingView.root.isVisible = it
+                }
         }
     }
 
     private fun FragmentSearchBinding.bindErrorView() {
         errorView.retryButton.setOnClickListener { viewModel.onPerformSearch() }
-        collectDistinctStateProperty(viewModel.stateFlow, SearchState::errorViewVisible) {
-            errorView.root.isVisible = it
+        launchSafely {
+            viewModel.stateFlow.map { it.errorViewVisible }
+                .distinctUntilChanged()
+                .collect {
+                    errorView.root.isVisible = it
+                }
         }
     }
 
     private fun FragmentSearchBinding.bindEmptyView() {
-        collectDistinctStateProperty(viewModel.stateFlow, SearchState::emptyViewVisible) {
-            emptyView.isVisible = it
+        launchSafely {
+            viewModel.stateFlow.map { it.emptyViewVisible }
+                .distinctUntilChanged()
+                .collect {
+                    emptyView.isVisible = it
+                }
         }
     }
 

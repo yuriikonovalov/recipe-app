@@ -2,19 +2,16 @@ package com.yuriikonovalov.recipeapp.data
 
 import com.google.common.truth.Truth.assertThat
 import com.yuriikonovalov.recipeapp.application.RecipeRepository
-import com.yuriikonovalov.recipeapp.util.FakePreferenceDataStore
-import com.yuriikonovalov.recipeapp.util.FakeRecipeLocalDataSource
-import com.yuriikonovalov.recipeapp.util.FakeRecipeRemoteDataSource
+import com.yuriikonovalov.recipeapp.fake.datasource.FakePreferenceDataStore
+import com.yuriikonovalov.recipeapp.fake.datasource.FakeRecipeLocalDataSource
+import com.yuriikonovalov.recipeapp.fake.datasource.FakeRecipeRemoteDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(JUnit4::class)
 class RecipeRepositoryImplTest {
     private lateinit var sut: RecipeRepository
 
@@ -27,7 +24,7 @@ class RecipeRepositoryImplTest {
     }
 
     @Test
-    fun randomRecipesCallReturnsEmptyList_shouldNotUpdate() = runTest {
+    fun `if randomRecipes call returns an empty list - should not update`() = runTest {
         // BEFORE
         val date = "12 Oct 2022"
         val expectedSizeOfRandomRecipes = sut.getRandomRecipes().first().size
@@ -45,7 +42,7 @@ class RecipeRepositoryImplTest {
     }
 
     @Test
-    fun randomRecipesCallReturnsNotEmptyList_shouldUpdate() = runTest {
+    fun `if randomRecipes call returns a not empty list - should update`() = runTest {
         // BEFORE
         val expectedDate = "12 Oct 2022"
         val expectedNumberOfRecipes = 10
@@ -62,7 +59,7 @@ class RecipeRepositoryImplTest {
     }
 
     @Test
-    fun updatingSuccess_recipesShouldHaveSavedFlagAsTrue() = runTest {
+    fun `if updating is successful - recipes should have a saved flag as true`() = runTest {
         // BEFORE
         val expectedDate = "12 Oct 2022"
         val expectedNumberOfRecipes = 3

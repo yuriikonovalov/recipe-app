@@ -1,75 +1,72 @@
 package com.yuriikonovalov.recipeapp.framework.ui.search
 
 import com.google.common.truth.Truth.assertThat
-import com.yuriikonovalov.recipeapp.application.usecases.SearchRecipesUseCase
-import com.yuriikonovalov.recipeapp.framework.ui.BaseViewModelTest
+import com.yuriikonovalov.recipeapp.application.usecases.SearchRecipes
+import com.yuriikonovalov.recipeapp.fake.usecase.FakeSearchRecipes
 import com.yuriikonovalov.recipeapp.presentation.search.SearchEvent
 import com.yuriikonovalov.recipeapp.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 
 @ExperimentalCoroutinesApi
-@RunWith(JUnit4::class)
-class SearchViewModelTest : BaseViewModelTest() {
+class SearchViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
-    private lateinit var sut: SearchViewModel
 
-    @Before
-    fun setup() {
-        super.setupBase()
-        sut = SearchViewModel(
-            SearchRecipesUseCase(repository),
-            mainDispatcherRule.testDispatcherProvider
-        )
-    }
+    private fun initSUT(searchRecipes: SearchRecipes = FakeSearchRecipes()) =
+        SearchViewModel(searchRecipes)
 
     @Test
-    fun onInputQuery_shouldUpdateState() {
+    fun `if input a query - state's query value should be updated`() {
         // BEFORE
-        val input = "abc"
+        val expected = "abc"
+        val sut = initSUT()
 
         // WHEN
-        sut.onInputQuery(input)
+        sut.onInputQuery(expected)
 
         // THEN
-        assertThat(sut.stateFlow.value.query).isEqualTo(input)
+        val actual = sut.stateFlow.value.query
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun onInputQueryWithWhiteSpacesAtTheBeginningAndEnd_shouldUpdateStateOmittingWhiteSpaces() {
+    fun `if input a query with white spaces at the beginning and end - the white spaces should be trimmed`() {
         // BEFORE
-        val input = "   abc"
+        val sut = initSUT()
+        val input = "   abc "
         val expected = input.trim()
 
         // WHEN
         sut.onInputQuery(input)
 
         // THEN
-        assertThat(sut.stateFlow.value.query).isEqualTo(expected)
+        val actual = sut.stateFlow.value.query
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun onPerformSearchWithBlankQuery_shouldShowErrorToast() {
+    fun `if perform search with a blank query - event value should be IncorrectQueryToast`() {
         // BEFORE
+        val sut = initSUT()
         val input = " "
+        val expected = SearchEvent.IncorrectQueryToast
         sut.onInputQuery(input)
 
         // WHEN
         sut.onPerformSearch()
 
         // THEN
-        assertThat(sut.eventFlow.value).isEqualTo(SearchEvent.IncorrectQueryToast)
+        val actual = sut.eventFlow.value
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun onPerformSearchWithNotBlankQuery_shouldNotShowErrorToast() {
+    fun `id perform search with a not blank query - event value should not be IncorrectQueryToast`() {
         // BEFORE
+        val sut = initSUT()
         val input = "not blank"
         sut.onInputQuery(input)
 
@@ -77,6 +74,7 @@ class SearchViewModelTest : BaseViewModelTest() {
         sut.onPerformSearch()
 
         // THEN
-        assertThat(sut.eventFlow.value).isEqualTo(null)
+        val actual = sut.eventFlow.value
+        assertThat(actual).isNotEqualTo(SearchEvent.IncorrectQueryToast)
     }
 }

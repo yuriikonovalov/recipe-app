@@ -8,40 +8,26 @@ import com.yuriikonovalov.recipeapp.application.entities.SearchRecipeResponse
 import com.yuriikonovalov.recipeapp.util.searchRecipe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class SearchRecipePagingSourceTest {
-    private lateinit var sut: SearchRecipePagingSource
-
-    @Mock
-    lateinit var remoteDataSource: RecipeRemoteDataSource
-
-    @Before
-    fun setup() {
-        MockitoAnnotations.openMocks(this)
-        sut = SearchRecipePagingSource(remoteDataSource, "pizza")
-    }
+    private val remoteDataSource: RecipeRemoteDataSource = mock()
 
     @Test
-    fun loadReturnsResultPage() = runTest {
+    fun `if load - return ResultPage`() = runTest {
         // BEFORE
         val response = SearchRecipeResponse(1, 0, listOf(searchRecipe()), 1)
         whenever(remoteDataSource.searchRecipes(anyString(), anyInt(), anyInt()))
             .thenReturn(response)
-
+        val sut = SearchRecipePagingSource(remoteDataSource, "pizza")
         // WHEN
         val actual = sut.load(
             Refresh(key = null, loadSize = 1, placeholdersEnabled = false)
@@ -57,11 +43,12 @@ class SearchRecipePagingSourceTest {
     }
 
     @Test
-    fun loadReturnsResultErrorWhenIOExceptionThrown() = runTest {
+    fun `if load and IOException is thrown- returns ResultError`() = runTest {
         // BEFORE
         val throwable = IOException()
         whenever(remoteDataSource.searchRecipes(anyString(), anyInt(), anyInt()))
             .thenThrow(throwable)
+        val sut = SearchRecipePagingSource(remoteDataSource, "pizza")
 
         // WHEN
         val actual = sut.load(
@@ -74,11 +61,12 @@ class SearchRecipePagingSourceTest {
     }
 
     @Test
-    fun loadReturnsResultErrorWhenHttpExceptionThrown() = runTest {
+    fun `if load and HttpException is thrown - returns ResultError`() = runTest {
         // BEFORE
         val throwable = HttpException(Response.success(null))
         whenever(remoteDataSource.searchRecipes(anyString(), anyInt(), anyInt()))
             .thenThrow(throwable)
+        val sut = SearchRecipePagingSource(remoteDataSource, "pizza")
 
         // WHEN
         val actual = sut.load(
@@ -91,21 +79,24 @@ class SearchRecipePagingSourceTest {
     }
 
     @Test(expected = java.lang.RuntimeException::class)
-    fun propagateExceptionOtherThanHttpOrIO() = runTest {
-        // BEFORE
-        whenever(remoteDataSource.searchRecipes(anyString(), anyInt(), anyInt()))
-            .thenThrow(java.lang.RuntimeException())
+    fun `if load and an exception is neither HttpException nor IOException = should propagate the exception`() =
+        runTest {
+            // BEFORE
+            whenever(remoteDataSource.searchRecipes(anyString(), anyInt(), anyInt()))
+                .thenThrow(java.lang.RuntimeException())
+            val sut = SearchRecipePagingSource(remoteDataSource, "pizza")
 
-        // WHEN
-        sut.load(Refresh(key = null, loadSize = 1, placeholdersEnabled = false))
-    }
+            // WHEN
+            sut.load(Refresh(key = null, loadSize = 1, placeholdersEnabled = false))
+        }
 
 
     @Test(expected = java.lang.NullPointerException::class)
-    fun propagateNullPointerExceptionWhenApiCallReturnsNull() = runTest {
+    fun `if api call returns null - should propagate NullPointerException`() = runTest {
         // BEFORE
         whenever(remoteDataSource.searchRecipes(anyString(), anyInt(), anyInt()))
             .thenReturn(null)
+        val sut = SearchRecipePagingSource(remoteDataSource, "pizza")
 
         // WHEN
         sut.load(Refresh(key = null, loadSize = 1, placeholdersEnabled = false))

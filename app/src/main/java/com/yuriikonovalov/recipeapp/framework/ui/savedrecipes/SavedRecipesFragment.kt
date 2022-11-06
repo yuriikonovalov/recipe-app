@@ -15,12 +15,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.yuriikonovalov.recipeapp.R
-
 import com.yuriikonovalov.recipeapp.databinding.FragmentSavedRecipesBinding
 import com.yuriikonovalov.recipeapp.presentation.savedrecipes.SavedRecipesEvent
-import com.yuriikonovalov.recipeapp.presentation.savedrecipes.SavedRecipesState
 import com.yuriikonovalov.recipeapp.util.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 class SavedRecipesFragment : Fragment() {
@@ -74,16 +74,19 @@ class SavedRecipesFragment : Fragment() {
         recipeAdapter.setOnRecipeClick(viewModel::onSelectRecipe)
         recipes.layoutManager = getLinearLayoutManager()
         recipes.adapter = recipeAdapter
-
-        collectDistinctStateProperty(viewModel.stateFlow, SavedRecipesState::recipes) {
-            recipeAdapter.submitList(it)
+        launchSafely {
+            viewModel.stateFlow.map { it.recipes }
+                .distinctUntilChanged()
+                .collect(recipeAdapter::submitList)
         }
-        collectDistinctStateProperty(
-            viewModel.stateFlow, SavedRecipesState::selectedRecipeCard
-        ) { id ->
-            // Draw a recipe card selected only when a recipe list and
-            // a recipe details fragment are both visible.
-            id?.let { recipeAdapter.selectCard(it) }
+        launchSafely {
+            viewModel.stateFlow.map { it.selectedRecipeCard }
+                .distinctUntilChanged()
+                .collect { id ->
+                    // Draw a recipe card selected only when a recipe list and
+                    // a recipe details fragment are both visible.
+                    id?.let { recipeAdapter.selectCard(it) }
+                }
         }
     }
 
@@ -96,10 +99,13 @@ class SavedRecipesFragment : Fragment() {
     }
 
     private fun FragmentSavedRecipesBinding.bindEmptyView() {
-        // Placeholder text.
         emptyPlaceholder.setText(R.string.message_empty_saved_recipes)
-        collectDistinctStateProperty(viewModel.stateFlow, SavedRecipesState::emptyList) { empty ->
-            emptyPlaceholder.isVisible = empty
+        launchSafely {
+            viewModel.stateFlow.map { it.emptyList }
+                .distinctUntilChanged()
+                .collect {
+                    emptyPlaceholder.isVisible = it
+                }
         }
     }
 

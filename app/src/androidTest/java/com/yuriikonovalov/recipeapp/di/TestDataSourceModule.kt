@@ -5,9 +5,9 @@ import com.yuriikonovalov.recipeapp.data.local.PreferenceDataStore
 import com.yuriikonovalov.recipeapp.data.local.RecipeLocalDataSource
 import com.yuriikonovalov.recipeapp.data.remote.RecipeRemoteDataSource
 import com.yuriikonovalov.recipeapp.fakes.FakePreferenceDataStore
-import com.yuriikonovalov.recipeapp.fakes.FakeRecipeRemoteDataSource
 import com.yuriikonovalov.recipeapp.framework.data.local.DateProviderImpl
 import com.yuriikonovalov.recipeapp.framework.data.local.database.RecipeLocalDataSourceImpl
+import com.yuriikonovalov.recipeapp.framework.data.remote.RecipeRemoteDataSourceImpl
 import com.yuriikonovalov.recipeapp.framework.di.DataSourceModule
 import dagger.Binds
 import dagger.Module
@@ -27,13 +27,13 @@ abstract class TestDataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindRecipeRemoteDataSource(impl: FakeRecipeRemoteDataSource): RecipeRemoteDataSource
+    abstract fun bindRecipeRemoteDataSource(impl: RecipeRemoteDataSourceImpl): RecipeRemoteDataSource
 
     @Binds
     @Singleton
     abstract fun bindRecipeLocalDataSource(impl: RecipeLocalDataSourceImpl): RecipeLocalDataSource
-//    abstract fun bindRecipeLocalDataSource(impl: FakeRecipeLocalDataSource): RecipeLocalDataSource
 
+    // Essentially, only this binding is changed.
     @Binds
     @Singleton
     abstract fun bindPreferenceDataStore(impl: FakePreferenceDataStore): PreferenceDataStore

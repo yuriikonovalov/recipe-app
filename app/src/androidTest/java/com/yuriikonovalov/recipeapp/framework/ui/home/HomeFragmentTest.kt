@@ -15,7 +15,6 @@ import com.yuriikonovalov.recipeapp.data.local.RecipeLocalDataSource
 import com.yuriikonovalov.recipeapp.data.remote.RecipeRemoteDataSource
 import com.yuriikonovalov.recipeapp.fakes.recipe
 import com.yuriikonovalov.recipeapp.util.EspressoIdlingResource
-import com.yuriikonovalov.recipeapp.util.asFake
 import com.yuriikonovalov.recipeapp.util.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -37,9 +36,6 @@ class HomeFragmentTest {
 
     @Inject
     lateinit var localSource: RecipeLocalDataSource
-
-    @Inject
-    lateinit var remoteSource: RecipeRemoteDataSource
 
     @Inject
     lateinit var idlingResource: EspressoIdlingResource
@@ -80,7 +76,6 @@ class HomeFragmentTest {
     fun clickRandomRecipe_navigateToRecipeDetailsFragment() = runTest {
         // BEFORE
         // Set recipes which will be passed to a recycler view.
-        remoteSource.asFake().randomRecipes = emptyList()
         val recipe = recipe(cache = true)
         localSource.insertRecipe(recipe)
         launchFragmentInHiltContainer<HomeFragment>(navHostController = testNavHostController)

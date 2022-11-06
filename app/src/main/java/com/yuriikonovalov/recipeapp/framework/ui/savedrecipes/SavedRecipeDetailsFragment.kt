@@ -23,6 +23,8 @@ import com.yuriikonovalov.recipeapp.presentation.model.*
 import com.yuriikonovalov.recipeapp.presentation.savedrecipes.*
 import com.yuriikonovalov.recipeapp.util.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 class SavedRecipeDetailsFragment : Fragment() {
@@ -65,50 +67,52 @@ class SavedRecipeDetailsFragment : Fragment() {
         bindButtons()
         bindIngredientList()
         bindMeasureSystemSpinner()
-        collectDistinctStateProperty(
-            viewModel.stateFlow,
-            SavedRecipesState::selectedRecipe
-        ) { recipe ->
-            content.root.isGone = recipe == null
-            recipe?.let { recipeUi ->
-                content.title.text = recipeUi.title
-                content.image.load(recipeUi.image) {
-                    crossfade(100)
-                    error(R.drawable.placeholder_meal)
-                    placeholder(R.drawable.placeholder_meal)
+        launchSafely {
+            viewModel.stateFlow.map { it.selectedRecipe }
+                .distinctUntilChanged()
+                .collect { recipe ->
+                    content.root.isGone = recipe == null
+                    recipe?.let { recipeUi ->
+                        content.title.text = recipeUi.title
+                        content.image.load(recipeUi.image) {
+                            crossfade(100)
+                            error(R.drawable.placeholder_meal)
+                            placeholder(R.drawable.placeholder_meal)
+                        }
+                        content.vegetarian.isVisible = recipeUi.vegetarian
+                        content.vegetarianIcon.isVisible = recipeUi.vegetarian
+
+                        content.time.isVisible = recipeUi.timeVisible
+                        content.timeIcon.isVisible = recipeUi.timeVisible
+                        content.time.text = recipeUi.time
+
+                        content.servings.isVisible = recipeUi.servingsVisible
+                        content.servingsIcon.isVisible = recipeUi.servingsVisible
+                        content.servings.text = recipeUi.servings
+
+                        content.mealTypes.isVisible = recipeUi.mealTypeVisible
+                        content.mealTypesIcon.isVisible = recipeUi.mealTypeVisible
+                        content.mealTypes.text = recipeUi.mealTypes
+
+                        content.ingredients.isVisible = recipeUi.ingredientsVisible
+                        content.ingredientsLabel.isVisible = recipeUi.ingredientsVisible
+                        ingredientAdapter.submitList(recipeUi.ingredients)
+
+                        content.instructionsLabel.isVisible = recipeUi.instructionsVisible
+                        content.instructions.isVisible = recipeUi.instructionsVisible
+                        content.instructions.text = recipeUi.instructions
+
+                        content.sourceButton.isVisible = recipeUi.sourceButtonVisible
+                        content.measureSystemSpinner.isVisible = recipeUi.measureSpinnerVisible
+
+                        content.saveButton.apply {
+                            setIconResource(true.asSavedIconRes())
+                            setText(true.asSavedStringRes())
+                        }
+                    }
                 }
-                content.vegetarian.isVisible = recipeUi.vegetarian
-                content.vegetarianIcon.isVisible = recipeUi.vegetarian
-
-                content.time.isVisible = recipeUi.timeVisible
-                content.timeIcon.isVisible = recipeUi.timeVisible
-                content.time.text = recipeUi.time
-
-                content.servings.isVisible = recipeUi.servingsVisible
-                content.servingsIcon.isVisible = recipeUi.servingsVisible
-                content.servings.text = recipeUi.servings
-
-                content.mealTypes.isVisible = recipeUi.mealTypeVisible
-                content.mealTypesIcon.isVisible = recipeUi.mealTypeVisible
-                content.mealTypes.text = recipeUi.mealTypes
-
-                content.ingredients.isVisible = recipeUi.ingredientsVisible
-                content.ingredientsLabel.isVisible = recipeUi.ingredientsVisible
-                ingredientAdapter.submitList(recipeUi.ingredients)
-
-                content.instructionsLabel.isVisible = recipeUi.instructionsVisible
-                content.instructions.isVisible = recipeUi.instructionsVisible
-                content.instructions.text = recipeUi.instructions
-
-                content.sourceButton.isVisible = recipeUi.sourceButtonVisible
-                content.measureSystemSpinner.isVisible = recipeUi.measureSpinnerVisible
-
-                content.saveButton.apply {
-                    setIconResource(true.asSavedIconRes())
-                    setText(true.asSavedStringRes())
-                }
-            }
         }
+
     }
 
     private fun FragmentSavedRecipeDetailsBinding.bindMeasureSystemSpinner() {
@@ -140,8 +144,12 @@ class SavedRecipeDetailsFragment : Fragment() {
     private fun FragmentSavedRecipeDetailsBinding.bindIngredientList() {
         content.ingredients.layoutManager = LinearLayoutManager(requireContext())
         content.ingredients.adapter = ingredientAdapter
-        collectDistinctStateProperty(viewModel.stateFlow, SavedRecipesState::measureSystem) {
-            ingredientAdapter.measureSystem = it
+        launchSafely {
+            viewModel.stateFlow.map { it.measureSystem }
+                .distinctUntilChanged()
+                .collect {
+                    ingredientAdapter.measureSystem = it
+                }
         }
     }
 

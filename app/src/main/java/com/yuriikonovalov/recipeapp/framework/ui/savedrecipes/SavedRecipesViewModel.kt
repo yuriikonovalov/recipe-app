@@ -4,16 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yuriikonovalov.recipeapp.application.entities.MeasureSystem
 import com.yuriikonovalov.recipeapp.application.entities.Recipe
-import com.yuriikonovalov.recipeapp.application.usecases.GetSavedRecipesUseCase
-import com.yuriikonovalov.recipeapp.application.usecases.UnsaveRecipeUseCase
+import com.yuriikonovalov.recipeapp.application.usecases.GetSavedRecipes
+import com.yuriikonovalov.recipeapp.application.usecases.UnsaveRecipe
 import com.yuriikonovalov.recipeapp.presentation.MapperUi
+import com.yuriikonovalov.recipeapp.presentation.model.RecipeUi
 import com.yuriikonovalov.recipeapp.presentation.savedrecipes.SavedRecipeDetailsEvent
 import com.yuriikonovalov.recipeapp.presentation.savedrecipes.SavedRecipesEvent
 import com.yuriikonovalov.recipeapp.presentation.savedrecipes.SavedRecipesState
-import com.yuriikonovalov.recipeapp.presentation.model.RecipeUi
 import com.yuriikonovalov.recipeapp.resource.onFailure
 import com.yuriikonovalov.recipeapp.resource.onSuccess
-import com.yuriikonovalov.recipeapp.util.DispatcherProvider
 import com.yuriikonovalov.recipeapp.util.WindowSizeClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,10 +23,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedRecipesViewModel @Inject constructor(
-    private val getSavedRecipes: GetSavedRecipesUseCase,
-    private val unsaveRecipe: UnsaveRecipeUseCase,
-    private val dispatcherProvider: DispatcherProvider,
-    private val recipeMapper: MapperUi<Recipe, RecipeUi>,
+    private val getSavedRecipes: GetSavedRecipes,
+    private val unsaveRecipe: UnsaveRecipe,
+    private val recipeMapper: MapperUi<Recipe, RecipeUi>
 ) : ViewModel() {
     private val initialState = SavedRecipesState()
     private val _stateFlow = MutableStateFlow(initialState)
@@ -89,7 +87,7 @@ class SavedRecipesViewModel @Inject constructor(
     }
 
     fun onSaveButtonClick() {
-        viewModelScope.launch(dispatcherProvider.main) {
+        viewModelScope.launch {
             // No need for checking for null as this method can only be invoked when a recipe is selected.
             val id = currentState.selectedRecipe!!.id
             unsaveRecipe(id)

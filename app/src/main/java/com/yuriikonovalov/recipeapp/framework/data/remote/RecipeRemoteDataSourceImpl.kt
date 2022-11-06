@@ -8,38 +8,31 @@ import com.yuriikonovalov.recipeapp.framework.data.remote.model.RecipeApi
 import com.yuriikonovalov.recipeapp.framework.data.remote.model.SearchRecipeResponseApi
 import com.yuriikonovalov.recipeapp.framework.data.remote.service.RecipeService
 import com.yuriikonovalov.recipeapp.resource.mapRemoteToDomainException
-import com.yuriikonovalov.recipeapp.util.DispatcherProvider
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 class RecipeRemoteDataSourceImpl @Inject constructor(
     private val service: RecipeService,
     private val recipeMapper: MapperApi<RecipeApi, Recipe>,
-    private val searchRecipeResponseMapper: MapperApi<SearchRecipeResponseApi, SearchRecipeResponse>,
-    private val dispatcherProvider: DispatcherProvider
+    private val searchRecipeResponseMapper: MapperApi<SearchRecipeResponseApi, SearchRecipeResponse>
 ) : RecipeRemoteDataSource {
     override suspend fun getRandomRecipes(number: Int): List<Recipe> {
-        return withContext(dispatcherProvider.io) {
-            try {
-                service.getRandomRecipes(number)
-                    .recipes
-                    .map(recipeMapper::mapToDomain)
-            } catch (e: Exception) {
-                throw mapRemoteToDomainException(e)
-            }
+        return try {
+            service.getRandomRecipes(number)
+                .recipes
+                .map(recipeMapper::mapToDomain)
+        } catch (e: Exception) {
+            throw mapRemoteToDomainException(e)
         }
     }
 
     override suspend fun getRecipeDetails(id: Int): Recipe {
-        return withContext(dispatcherProvider.io) {
-            try {
-                service.getRecipeInformation(id).let {
-                    recipeMapper.mapToDomain(it)
-                }
-            } catch (e: Exception) {
-                throw mapRemoteToDomainException(e)
+        return try {
+            service.getRecipeInformation(id).let {
+                recipeMapper.mapToDomain(it)
             }
+        } catch (e: Exception) {
+            throw mapRemoteToDomainException(e)
         }
     }
 
@@ -48,10 +41,8 @@ class RecipeRemoteDataSourceImpl @Inject constructor(
         offset: Int,
         number: Int
     ): SearchRecipeResponse {
-        return withContext(dispatcherProvider.io) {
-            service.searchRecipes(query, offset, number).let {
-                searchRecipeResponseMapper.mapToDomain(it)
-            }
+        return service.searchRecipes(query, offset, number).let {
+            searchRecipeResponseMapper.mapToDomain(it)
         }
     }
 }

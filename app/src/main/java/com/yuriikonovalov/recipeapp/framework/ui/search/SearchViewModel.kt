@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.cachedIn
-import com.yuriikonovalov.recipeapp.application.usecases.SearchRecipesUseCase
+import com.yuriikonovalov.recipeapp.application.usecases.SearchRecipes
 import com.yuriikonovalov.recipeapp.presentation.search.SearchEvent
 import com.yuriikonovalov.recipeapp.presentation.search.SearchState
-import com.yuriikonovalov.recipeapp.util.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -16,22 +15,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRecipes: SearchRecipesUseCase,
-    private val dispatcherProvider: DispatcherProvider
+    private val searchRecipes: SearchRecipes
 ) : ViewModel() {
     private val _stateFlow = MutableStateFlow(SearchState())
-    val stateFlow = _stateFlow.asStateFlow()
-    private val currentState get() = stateFlow.value
     private val _eventFlow = MutableStateFlow<SearchEvent?>(null)
+    private val currentState get() = stateFlow.value
+    val stateFlow = _stateFlow.asStateFlow()
     val eventFlow get() = _eventFlow.asStateFlow()
     val eventConsumer = { _eventFlow.value = null }
 
-
+    private val pageSize = 15
     private val searches = MutableSharedFlow<String>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagingData = searches
-        .flatMapLatest { query -> searchRecipes(query) }
+        .flatMapLatest { query -> searchRecipes(query, pageSize) }
         .cachedIn(viewModelScope)
 
     fun onInputQuery(query: String) {
@@ -42,7 +40,7 @@ class SearchViewModel @Inject constructor(
         if (currentState.query.isBlank()) {
             _eventFlow.value = SearchEvent.IncorrectQueryToast
         } else {
-            viewModelScope.launch(dispatcherProvider.main) { searches.emit(currentState.query) }
+            viewModelScope.launch { searches.emit(currentState.query) }
         }
     }
 

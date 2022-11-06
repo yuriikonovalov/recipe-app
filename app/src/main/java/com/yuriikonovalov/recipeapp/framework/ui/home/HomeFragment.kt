@@ -18,9 +18,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuriikonovalov.recipeapp.R
 import com.yuriikonovalov.recipeapp.databinding.FragmentHomeBinding
 import com.yuriikonovalov.recipeapp.presentation.home.HomeEvent
-import com.yuriikonovalov.recipeapp.presentation.home.HomeState
 import com.yuriikonovalov.recipeapp.util.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -69,28 +70,44 @@ class HomeFragment : Fragment() {
 
     private fun FragmentHomeBinding.bindEmptyPlaceholder() {
         content.emptyPlaceholder.setText(R.string.loading_error_message)
-        collectDistinctStateProperty(viewModel.stateFlow, HomeState::emptyPlaceholderVisible) {
-            content.emptyPlaceholder.isVisible = it
+        launchSafely {
+            viewModel.stateFlow.map { it.emptyPlaceholderVisible }
+                .distinctUntilChanged()
+                .collect {
+                    content.emptyPlaceholder.isVisible = it
+                }
         }
     }
 
     private fun FragmentHomeBinding.bindRetryButton() {
         content.retryButton.setOnClickListener { viewModel.refreshRecipes() }
-        collectDistinctStateProperty(viewModel.stateFlow, HomeState::emptyPlaceholderVisible) {
-            content.retryButton.isVisible = it
+        launchSafely {
+            viewModel.stateFlow.map { it.emptyPlaceholderVisible }
+                .distinctUntilChanged()
+                .collect {
+                    content.retryButton.isVisible = it
+                }
         }
     }
 
     private fun FragmentHomeBinding.bindRecipeListTitle() {
-        collectDistinctStateProperty(viewModel.stateFlow, HomeState::empty) {
-            content.listTitle.isVisible = it.not()
+        launchSafely {
+            viewModel.stateFlow.map { it.empty }
+                .distinctUntilChanged()
+                .collect {
+                    content.listTitle.isVisible = it.not()
+                }
         }
     }
 
     private fun FragmentHomeBinding.bindLoadingPlaceholder() {
         content.loadingPlaceholder.message.setText(R.string.loading_random_recipes)
-        collectDistinctStateProperty(viewModel.stateFlow, HomeState::loadingPlaceholderVisible) {
-            content.loadingPlaceholder.root.isVisible = it
+        launchSafely {
+            viewModel.stateFlow.map { it.loadingPlaceholderVisible }
+                .distinctUntilChanged()
+                .collect {
+                    content.loadingPlaceholder.root.isVisible = it
+                }
         }
     }
 
@@ -108,11 +125,11 @@ class HomeFragment : Fragment() {
     private fun FragmentHomeBinding.bindRecipeList() {
         content.randomRecipeList.layoutManager = getLayoutManager()
         content.randomRecipeList.adapter = recipeAdapter
-        collectDistinctStateProperty(
-            viewModel.stateFlow,
-            HomeState::recipes,
-            recipeAdapter::submitList
-        )
+        launchSafely {
+            viewModel.stateFlow.map { it.recipes }
+                .distinctUntilChanged()
+                .collect(recipeAdapter::submitList)
+        }
     }
 
     private fun FragmentHomeBinding.bindWidthWindowSizeClassComputing() {

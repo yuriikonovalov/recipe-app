@@ -1,101 +1,126 @@
 package com.yuriikonovalov.recipeapp.framework.ui.recipedetails
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.*
 import com.yuriikonovalov.recipeapp.application.entities.MeasureSystem
-import com.yuriikonovalov.recipeapp.application.usecases.GetRecipeDetailsUseCase
-import com.yuriikonovalov.recipeapp.application.usecases.SaveRecipeUseCase
-import com.yuriikonovalov.recipeapp.application.usecases.UnsaveRecipeUseCase
-import com.yuriikonovalov.recipeapp.framework.ui.BaseViewModelTest
+import com.yuriikonovalov.recipeapp.application.usecases.*
+import com.yuriikonovalov.recipeapp.fake.usecase.FakeGetRecipeDetails
+import com.yuriikonovalov.recipeapp.fake.usecase.FakeSaveRecipe
+import com.yuriikonovalov.recipeapp.fake.usecase.FakeUnsaveRecipe
 import com.yuriikonovalov.recipeapp.util.EspressoIdlingResource
-import com.yuriikonovalov.recipeapp.util.FakeRecipeMapperUi
+import com.yuriikonovalov.recipeapp.fake.mapper.FakeRecipeMapperUi
 import com.yuriikonovalov.recipeapp.util.MainDispatcherRule
 import com.yuriikonovalov.recipeapp.util.recipe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.kotlin.mock
 
 @ExperimentalCoroutinesApi
-@RunWith(JUnit4::class)
-class RecipeDetailsViewModelTest : BaseViewModelTest() {
+class RecipeDetailsViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
-    private lateinit var sut: RecipeDetailsViewModel
+    private val mockEspressoIdlingResource: EspressoIdlingResource = mock()
 
-    // ViewModel's argument.
-    private val id = 1
-
-    @Before
-    fun setup() {
-        super.setupBase()
-        val mockEspressoIdlingResource = mock<EspressoIdlingResource>()
-        sut = RecipeDetailsViewModel(
-            id,
-            SaveRecipeUseCase(repository),
-            UnsaveRecipeUseCase(repository),
-            GetRecipeDetailsUseCase(repository),
-            mainDispatcherRule.testDispatcherProvider,
-            FakeRecipeMapperUi,
-            mockEspressoIdlingResource
-        )
-    }
+    private fun initSUT(
+        id: Int,
+        saveRecipe: SaveRecipe = FakeSaveRecipe(),
+        unsaveRecipe: UnsaveRecipe = FakeUnsaveRecipe(),
+        getRecipeDetails: GetRecipeDetails = FakeGetRecipeDetails()
+    ) = RecipeDetailsViewModel(
+        id,
+        saveRecipe,
+        unsaveRecipe,
+        getRecipeDetails,
+        FakeRecipeMapperUi,
+        mockEspressoIdlingResource
+    )
 
     @Test
-    fun onSaveButtonClickWhenRecipeIsNotSaved_shouldSetFlagSavedAsTrue() = runTest {
+    fun `if open saved recipe - saved flag should be true`() = runTest {
         // BEFORE
-        val expectedRecipe = recipe().copy(id = id, saved = false)
-        localDataSource.insertRecipe(expectedRecipe)
-        assertThat(repository.getRecipe(expectedRecipe.id)!!.saved).isFalse()
-        // Make sure recipe details loaded.
-        sut.loadRecipeDetails(id)
+        val recipe = recipe(saved = true)
+        val sut = initSUT(id = recipe.id, getRecipeDetails = FakeGetRecipeDetails(recipe))
 
         // WHEN
-        sut.onSaveButtonClick()
+        runCurrent()
 
         // THEN
-        assertThat(repository.getRecipe(expectedRecipe.id)!!.saved).isTrue()
+        val actual = sut.stateFlow.value.recipe?.saved
+        assertThat(actual).isTrue()
     }
 
     @Test
-    fun onSaveButtonClickWhenRecipeIsSaved_shouldSetFlagSavedAsFalse() = runTest {
+    fun `if open not saved recipe - saved flag should be false`() = runTest {
         // BEFORE
-        val expectedRecipe = recipe().copy(id = id, cache = true, saved = true)
-        localDataSource.insertRecipe(expectedRecipe)
-        assertThat(repository.getRecipe(expectedRecipe.id)!!.saved).isTrue()
-        // Make sure recipe details loaded.
-        sut.loadRecipeDetails(id)
+        val recipe = recipe(saved = false)
+        val sut = initSUT(id = recipe.id, getRecipeDetails = FakeGetRecipeDetails(recipe))
 
         // WHEN
-        sut.onSaveButtonClick()
+        runCurrent()
 
         // THEN
-        assertThat(repository.getRecipe(expectedRecipe.id)!!.saved).isFalse()
+        val actual = sut.stateFlow.value.recipe?.saved
+        assertThat(actual).isFalse()
     }
 
     @Test
-    fun onSelectMeasureSystemCorrectPosition_shouldUpdateStateWithCorrectMeasureSystem() {
+    fun `if start the view model - loading flag should be true`() {
+        // BEFORE
+        val recipe = recipe()
+        val sut = initSUT(id = recipe.id, getRecipeDetails = FakeGetRecipeDetails(recipe))
+
+        // THEN
+        val actual = sut.stateFlow.value.loading
+        assertThat(actual).isTrue()
+    }
+
+    @Test
+    fun `if getRecipeDetails returns Failure - error flag should be true and loading flag false`() =
+        runTest {
+            // BEFORE
+            val recipe = recipe()
+            val sut =
+                initSUT(id = recipe.id, getRecipeDetails = FakeGetRecipeDetails(isSuccess = false))
+
+            // WHEN
+            advanceUntilIdle()
+
+            // THEN
+            val actualError = sut.stateFlow.value.error
+            assertThat(actualError).isTrue()
+
+            val actualLoading = sut.stateFlow.value.loading
+            assertThat(actualLoading).isFalse()
+        }
+
+    @Test
+    fun `if change MeasureSystem - should update state with correct MeasureSystem`() {
         /*
-            0 -> MeasureSystem.Metric
-            1 -> MeasureSystem.Us
-            else -> throw IllegalArgumentException("Was expected only 2 items.")
-         * */
+           0 -> MeasureSystem.Metric
+           1 -> MeasureSystem.Us
+           else -> throw IllegalArgumentException("Was expected only 2 items.")
+        * */
         // BEFORE
-        // Make sure the current measure system is not one that we are going to set.
-        assertThat(sut.stateFlow.value.measureSystem).isNotEqualTo(MeasureSystem.Us)
+        val sut = initSUT(id = 1)
+        // Make sure the current measure system is not the one that we are going to set.
+        val actualBeforeChange = sut.stateFlow.value.measureSystem
+        assertThat(actualBeforeChange).isNotEqualTo(MeasureSystem.Us)
 
         // WHEN
         sut.onSelectMeasureSystem(1)
 
         // THEN
-        assertThat(sut.stateFlow.value.measureSystem).isEqualTo(MeasureSystem.Us)
+        val actualAfterChange = sut.stateFlow.value.measureSystem
+        assertThat(actualAfterChange).isEqualTo(MeasureSystem.Us)
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun onSelectMeasureSystemOutOfRange_shouldThrowException() {
+    fun `if select measureSystem that is out of range - should throw exception`() {
+        // BEFORE
+        val sut = initSUT(id = 1)
         /*
             0 -> MeasureSystem.Metric
             1 -> MeasureSystem.Us
@@ -104,15 +129,5 @@ class RecipeDetailsViewModelTest : BaseViewModelTest() {
 
         // WHEN
         sut.onSelectMeasureSystem(2)
-    }
-
-    @Test
-    fun exceptionIsThrownWhenLoadingRecipeDetails_shouldSetErrorFlagAsTrue() = runTest {
-        // BEFORE
-        // Make sure there's no recipe with the given id in local data source.
-        remoteDataSourceAsFake.shouldThrowException(true)
-
-        sut.loadRecipeDetails(id)
-        assertThat(sut.stateFlow.value.error).isTrue()
     }
 }

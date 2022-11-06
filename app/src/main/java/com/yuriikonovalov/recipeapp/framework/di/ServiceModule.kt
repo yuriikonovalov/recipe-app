@@ -1,7 +1,6 @@
 package com.yuriikonovalov.recipeapp.framework.di
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.yuriikonovalov.recipeapp.BuildConfig
 import com.yuriikonovalov.recipeapp.framework.data.remote.service.RecipeService
 import dagger.Module
@@ -20,7 +19,7 @@ private const val HEADER_API_KEY = "x-api-key"
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object ServiceModule {
 
     @Singleton
     @Provides
@@ -42,7 +41,7 @@ object AppModule {
     @Provides
     fun provideRecipeService(okHttpClient: OkHttpClient): RecipeService {
         val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
+//            .addLast(KotlinJsonAdapterFactory())
             .build()
 
         return Retrofit.Builder()

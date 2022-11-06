@@ -19,20 +19,6 @@ fun View.hideKeyboard() {
     imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun <T, R> Fragment.collectDistinctStateProperty(
-    stateFlow: StateFlow<T>,
-    mapper: (stateHolder: T) -> R,
-    onCollect: (value: R) -> Unit,
-) {
-    viewLifecycleOwner.lifecycleScope.launch {
-        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            stateFlow.map(mapper)
-                .distinctUntilChanged()
-                .collect(onCollect)
-        }
-    }
-}
-
 fun Fragment.launchSafely(body: suspend () -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
