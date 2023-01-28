@@ -2,12 +2,17 @@ package com.yuriikonovalov.recipeapp.framework.ui.mapper
 
 import android.content.Context
 import com.yuriikonovalov.recipeapp.R
+import com.yuriikonovalov.recipeapp.application.entities.Ingredient
 import com.yuriikonovalov.recipeapp.application.entities.Recipe
 import com.yuriikonovalov.recipeapp.presentation.MapperUi
+import com.yuriikonovalov.recipeapp.presentation.model.IngredientUi
 import com.yuriikonovalov.recipeapp.presentation.model.RandomRecipeUi
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * This is a UI mapper between [RandomRecipeUi] and [Recipe].
+ */
 class RandomRecipeMapperUi @Inject constructor(
     @ApplicationContext private val context: Context
 ) : MapperUi<Recipe, RandomRecipeUi> {

@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the search screen.
+ */
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchRecipes: SearchRecipes
@@ -22,6 +25,10 @@ class SearchViewModel @Inject constructor(
     private val currentState get() = stateFlow.value
     val stateFlow = _stateFlow.asStateFlow()
     val eventFlow get() = _eventFlow.asStateFlow()
+
+    /**
+     * A function that sets [eventFlow]'s value to null.
+     */
     val eventConsumer = { _eventFlow.value = null }
 
     private val pageSize = 15
@@ -32,10 +39,19 @@ class SearchViewModel @Inject constructor(
         .flatMapLatest { query -> searchRecipes(query, pageSize) }
         .cachedIn(viewModelScope)
 
+    /**
+     * Changes current state by updating a query.
+     *
+     * @param query a new query.
+     */
     fun onInputQuery(query: String) {
         _stateFlow.update { it.updateQuery(query.trim()) }
     }
 
+    /**
+     * Triggers search logic if the query is not blank,
+     * otherwise - triggers [eventFlow] to emit a [SearchEvent.IncorrectQueryToast] event.
+     */
     fun onPerformSearch() {
         if (currentState.query.isBlank()) {
             _eventFlow.value = SearchEvent.IncorrectQueryToast

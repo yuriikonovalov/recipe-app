@@ -2,6 +2,19 @@ package com.yuriikonovalov.recipeapp.presentation.model
 
 import android.text.Spanned
 
+/**
+ * This is a UI model of [com.yuriikonovalov.recipeapp.application.entities.Recipe].
+ *
+ * @property id id of the recipe.
+ * @property image a URL of the image of the recipe.
+ * @property servings a number of servings of the recipe.
+ * @property time amount of time in minutes needed for the recipe.
+ * @property ingredients a list of the ingredients of the recipe.
+ * @property instructions instructions required to cook a dish.
+ * @property sourceUrl a URL of the recipe.
+ * @property vegetarian a flag to denote if the recipe is vegetarian or not.
+ * @property saved a flag to show if the recipe is saved to favorites or not.
+ */
 data class RecipeUi(
     val id: Int,
     val image: String?,

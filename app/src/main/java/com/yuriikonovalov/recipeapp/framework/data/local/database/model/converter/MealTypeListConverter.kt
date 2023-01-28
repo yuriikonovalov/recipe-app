@@ -7,6 +7,11 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+/**
+ * This is a converter that is used by the Room library.
+ *
+ * It converts a list of [MealType] to [String] and back.
+ */
 class MealTypeListConverter {
     @TypeConverter
     fun listMealTypeToString(value: List<MealType>): String = Json.encodeToString(value)

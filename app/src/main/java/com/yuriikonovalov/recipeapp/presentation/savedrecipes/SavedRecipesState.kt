@@ -4,6 +4,16 @@ import com.yuriikonovalov.recipeapp.application.entities.MeasureSystem
 import com.yuriikonovalov.recipeapp.presentation.model.RecipeUi
 import com.yuriikonovalov.recipeapp.util.WindowSizeClass
 
+/**
+ * This class holds state of the saved recipes screen.
+ *
+ * @property recipes a list of all saved recipes.
+ * @property selectedRecipe a recipe that is shown in the details pane.
+ * @property measureSystem a [MeasureSystem] that is used for displaying ingredients amounts.
+ * @property saved a flag for denoting that a recipe is saved.
+ * @property windowSizeClass an instance of [WindowSizeClass] that points to the current window size.
+ * @property paneOpen shows if the details pane is open or not.
+ */
 data class SavedRecipesState(
     val recipes: List<RecipeUi> = emptyList(),
     val selectedRecipe: RecipeUi? = null,

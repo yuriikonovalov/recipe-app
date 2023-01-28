@@ -21,6 +21,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the saved recipes screen.
+ */
 @HiltViewModel
 class SavedRecipesViewModel @Inject constructor(
     private val getSavedRecipes: GetSavedRecipes,
@@ -58,7 +61,14 @@ class SavedRecipesViewModel @Inject constructor(
         }
     }
 
+    /**
+     * A function that sets [_detailsEventFlow]'s value to null.
+     */
     val detailsEventConsumer = { _detailsEventFlow.value = null }
+
+    /**
+     * A function that sets [_eventFlow]'s value to null.
+     */
     val eventConsumer = { _eventFlow.value = null }
 
     private fun closePaneOrNavigateUp(): SavedRecipesEvent {
@@ -70,22 +80,39 @@ class SavedRecipesViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Triggers [eventFlow] to emit a [SavedRecipesEvent.CloseDetailsPane]
+     * or [SavedRecipesEvent.OpenDetailsPane] based on the current state.
+     */
     fun onClickBackButton() {
         _eventFlow.value = closePaneOrNavigateUp()
     }
 
+    /**
+     * Triggers [eventFlow] to emit a [SavedRecipesEvent.CloseDetailsPane]
+     * or [SavedRecipesEvent.OpenDetailsPane] based on the current state.
+     */
     fun onClickNavigateUpButton() {
         _eventFlow.value = closePaneOrNavigateUp()
     }
 
+    /**
+     * Updates the [SavedRecipesState.paneOpen] property with the given [open] value.
+     */
     fun onUpdatePaneState(open: Boolean) {
         _stateFlow.update { it.updatePaneOpen(open) }
     }
 
+    /**
+     * Updates the [SavedRecipesState.windowSizeClass] property with the given [widthWindowSizeClass] value.
+     */
     fun onUpdateWindowSizeClass(widthWindowSizeClass: WindowSizeClass) {
         _stateFlow.update { it.updateWindowSizeClass(widthWindowSizeClass) }
     }
 
+    /**
+     * Performs removing the recipe from the favorites.
+     */
     fun onSaveButtonClick() {
         viewModelScope.launch {
             // No need for checking for null as this method can only be invoked when a recipe is selected.

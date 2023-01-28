@@ -11,9 +11,16 @@ import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+/**
+ * The main class of the application.
+ */
 @HiltAndroidApp
 class RecipeApp : Application(), Configuration.Provider {
+
     @Inject
+    /**
+     * A variable that contains a reference to WorkerFactory.
+     */
     lateinit var workerFactory: HiltWorkerFactory
 
     override fun onCreate() {
@@ -21,6 +28,9 @@ class RecipeApp : Application(), Configuration.Provider {
         addDeleteNeedlessRecipesPeriodicWork()
     }
 
+    /**
+     * A method that adds a unique periodic work to WorkManager
+     */
     private fun addDeleteNeedlessRecipesPeriodicWork() {
         val workRequest =
             PeriodicWorkRequestBuilder<DeleteNeedlessRecipesWorker>(12, TimeUnit.HOURS)
@@ -32,6 +42,10 @@ class RecipeApp : Application(), Configuration.Provider {
         )
     }
 
+    /**
+     * A method that builds a [Configuration] object which is used to customize WorkManager upon initialization.
+     * @return [Configuration]
+     */
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setWorkerFactory(workerFactory)

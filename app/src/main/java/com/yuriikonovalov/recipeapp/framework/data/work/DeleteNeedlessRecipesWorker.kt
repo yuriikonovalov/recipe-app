@@ -9,6 +9,9 @@ import com.yuriikonovalov.recipeapp.application.usecases.DeleteNeedlessRecipesIm
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
+/**
+ * A custom implementation of [CoroutineWorker] for a [DeleteNeedlessRecipes] use case.
+ */
 @HiltWorker
 class DeleteNeedlessRecipesWorker @AssistedInject constructor(
     @Assisted context: Context,

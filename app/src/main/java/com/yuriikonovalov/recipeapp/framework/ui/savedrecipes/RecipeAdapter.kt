@@ -10,6 +10,11 @@ import coil.load
 import com.yuriikonovalov.recipeapp.databinding.ItemRecipeAdapterBinding
 import com.yuriikonovalov.recipeapp.presentation.model.RecipeUi
 
+/**
+ * A custom implementation of [ListAdapter] for displaying a list of recipes.
+ *
+ * @property onRecipeClick a function that will be called when an item of the list is clicked.
+ */
 class RecipeAdapter : ListAdapter<RecipeUi, RecipeAdapter.RecipeViewHolder>(diffCallback) {
     private lateinit var onRecipeClick: ((recipe: RecipeUi) -> Unit)
     fun setOnRecipeClick(onRecipeClick: (recipe: RecipeUi) -> Unit) {

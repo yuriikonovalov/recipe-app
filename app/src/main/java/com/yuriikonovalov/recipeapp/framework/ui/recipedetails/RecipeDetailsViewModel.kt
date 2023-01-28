@@ -21,6 +21,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the recipe details screen.
+ */
 class RecipeDetailsViewModel @AssistedInject constructor(
     @Assisted private val recipeId: Int,
     private val saveRecipe: SaveRecipe,
@@ -34,12 +37,19 @@ class RecipeDetailsViewModel @AssistedInject constructor(
     private val _eventFlow = MutableStateFlow<RecipeDetailsEvent?>(null)
     val stateFlow get() = _stateFlow.asStateFlow()
     val eventFlow get() = _eventFlow.asStateFlow()
+
+    /**
+     * A function that sets [eventFlow]'s value to null.
+     */
     val eventConsumer = { _eventFlow.value = null }
 
     init {
         loadRecipeDetails(recipeId)
     }
 
+    /**
+     * Saves the recipe to favorites.
+     */
     fun onSaveButtonClick() {
         espressoIdlingResource.increment()
         viewModelScope.launch {
@@ -53,11 +63,17 @@ class RecipeDetailsViewModel @AssistedInject constructor(
         }
     }
 
+    /**
+     * Triggers [eventFlow] to emit a [RecipeDetailsEvent.OpenSourcePage] event.
+     */
     fun onSourceButtonClick() {
         // Invoked only if there's a source page url.
         _eventFlow.value = RecipeDetailsEvent.OpenSourcePage(currentState.recipe!!.sourceUrl!!)
     }
 
+    /**
+     * Changes [MeasureSystem] for displaying and redraws views that depend on it.
+     */
     fun onSelectMeasureSystem(position: Int) {
         val measureSystem = when (position) {
             0 -> MeasureSystem.Metric
@@ -87,6 +103,11 @@ class RecipeDetailsViewModel @AssistedInject constructor(
         }
     }
 
+    /**
+     * Updates state by setting the error flag to false and starts loading data.
+     *
+     * @param id id of the recipe that should be loaded.
+     */
     fun onRetryButtonClick(id: Int) {
         _stateFlow.update { it.updateError(false) }
         loadRecipeDetails(id)

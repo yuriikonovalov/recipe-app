@@ -24,6 +24,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+/**
+ * Orchestrates dependency inject for mappers.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class MapperModule {

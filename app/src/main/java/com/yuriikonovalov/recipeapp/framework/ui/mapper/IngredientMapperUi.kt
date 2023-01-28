@@ -7,6 +7,9 @@ import com.yuriikonovalov.recipeapp.presentation.model.IngredientUi
 import com.yuriikonovalov.recipeapp.util.roundDecimals
 import javax.inject.Inject
 
+/**
+ * This is a UI mapper between [IngredientUi] and [Ingredient].
+ */
 class IngredientMapperUi @Inject constructor() : MapperUi<Ingredient, IngredientUi> {
     override fun mapToUi(domain: Ingredient): IngredientUi {
         return IngredientUi(

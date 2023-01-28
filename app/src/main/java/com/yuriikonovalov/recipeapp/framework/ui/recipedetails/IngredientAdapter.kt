@@ -13,9 +13,17 @@ import com.yuriikonovalov.recipeapp.application.entities.MeasureSystem
 import com.yuriikonovalov.recipeapp.databinding.ItemIngredientAdapterBinding
 import com.yuriikonovalov.recipeapp.presentation.model.IngredientUi
 
+/**
+ * A custom implementation of [ListAdapter] for displaying a list of ingredients.
+ */
 class IngredientAdapter :
     ListAdapter<IngredientUi, IngredientAdapter.IngredientViewHolder>(diffCallback) {
 
+    /**
+     * Keeps a type of [MeasureSystem] that is used for displaying.
+     *
+     * The list will be redrawn when it changes.
+     */
     var measureSystem: MeasureSystem = MeasureSystem.Metric
         @SuppressLint("NotifyDataSetChanged")
         set(value) {

@@ -4,12 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.yuriikonovalov.recipeapp.R
 import com.yuriikonovalov.recipeapp.application.entities.SearchRecipe
 import com.yuriikonovalov.recipeapp.databinding.ItemSearchRecipeAdapterBinding
 
+/**
+ * A custom implementation of [PagingDataAdapter] for displaying a list of search results.
+ *
+ * @property onItemClick a function that will be called an item of the list clicked.
+ */
 class SearchRecipeAdapter(
     private val onItemClick: (id: Int) -> Unit
 ) : PagingDataAdapter<SearchRecipe, SearchRecipeAdapter.SearchRecipeViewHolder>(diffCallback) {

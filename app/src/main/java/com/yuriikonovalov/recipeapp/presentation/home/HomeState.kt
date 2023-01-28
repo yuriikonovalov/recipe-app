@@ -2,6 +2,13 @@ package com.yuriikonovalov.recipeapp.presentation.home
 
 import com.yuriikonovalov.recipeapp.presentation.model.RandomRecipeUi
 
+/**
+ * This class holds state of the home screen.
+ *
+ * @property recipes a list of [RandomRecipeUi].
+ * @property loading a flag that shows if data is loading or not.
+ * @property empty a flag that shows if there's no data to show.
+ */
 data class HomeState(
     val recipes: List<RandomRecipeUi> = emptyList(),
     val loading: Boolean = false,

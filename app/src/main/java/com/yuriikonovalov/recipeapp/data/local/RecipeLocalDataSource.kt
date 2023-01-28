@@ -3,6 +3,9 @@ package com.yuriikonovalov.recipeapp.data.local
 import com.yuriikonovalov.recipeapp.application.entities.Recipe
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Defines the interface for a class that will provide access to a local data source.
+ */
 interface RecipeLocalDataSource {
     suspend fun insertRecipe(recipe: Recipe)
     suspend fun insertRecipes(recipes: List<Recipe>)

@@ -17,6 +17,11 @@ private fun defaultCombinedLoadStates() = CombinedLoadStates(
     mediator = null
 )
 
+/**
+ * This class holds state of the search screen.
+ *
+ * @constructor Creates an instance of [SearchState].
+ */
 data class SearchState(
     val query: String = "",
     val combinedLoadStates: CombinedLoadStates = defaultCombinedLoadStates(),

@@ -11,6 +11,13 @@ import com.yuriikonovalov.recipeapp.resource.mapRemoteToDomainException
 import javax.inject.Inject
 
 
+/**
+ * Implementation of [RecipeRemoteDataSource].
+ *
+ * @property service a remote recipe service.
+ * @property recipeMapper an api mapper between [Recipe] and [RecipeApi].
+ * @property searchRecipeResponseMapper an api mapper between [SearchRecipeResponse] and [SearchRecipeResponseApi].
+ */
 class RecipeRemoteDataSourceImpl @Inject constructor(
     private val service: RecipeService,
     private val recipeMapper: MapperApi<RecipeApi, Recipe>,

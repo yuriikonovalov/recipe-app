@@ -20,6 +20,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the home screen.
+ */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getRandomRecipes: GetRandomRecipes,
@@ -30,8 +33,13 @@ class HomeViewModel @Inject constructor(
     private val _stateFlow = MutableStateFlow(HomeState())
     private val _eventFlow = MutableStateFlow<HomeEvent?>(null)
     private val numberOfRecipes = 5
+
     val stateFlow get() = _stateFlow.asStateFlow()
     val eventFlow = _eventFlow.asStateFlow()
+
+    /**
+     * A function that sets [eventFlow]'s value to null.
+     */
     val eventConsumer = { _eventFlow.value = null }
 
     init {
@@ -67,6 +75,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Refreshes a list of random recipes.
+     */
     fun refreshRecipes() {
         idlingResource.increment()
         _stateFlow.update { it.updateLoading(true) }
@@ -76,10 +87,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Triggers [eventFlow] to emit a [HomeEvent.OpenRecipeDetails] event.
+     */
     fun onRecipeClick(id: Int) {
         _eventFlow.value = HomeEvent.OpenRecipeDetails(id)
     }
 
+    /**
+     * Triggers [eventFlow] to emit a [HomeEvent.GoToSearchFragment] event.
+     */
     fun onSearchButtonClick() {
         _eventFlow.value = HomeEvent.GoToSearchFragment
     }

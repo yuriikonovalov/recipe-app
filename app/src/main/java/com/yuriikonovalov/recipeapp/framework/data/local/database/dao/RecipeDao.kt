@@ -9,6 +9,9 @@ import com.yuriikonovalov.recipeapp.framework.data.local.database.model.RecipeDb
 import com.yuriikonovalov.recipeapp.framework.data.local.database.model.relation.AggregateRecipeDb
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Defines the DAO interface for [RecipeDb] which will be used by the Room library.
+ */
 @Dao
 interface RecipeDao {
     @Insert

@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yuriikonovalov.recipeapp.R
 import com.yuriikonovalov.recipeapp.databinding.ItemSearchRecipeLoadStateAdapterBinding
 
+/**
+ * A custom implementation of [LoadStateAdapter].
+ */
 class SearchRecipeLoadStateAdapter(private val onRetry: () -> Unit) :
     LoadStateAdapter<SearchRecipeLoadStateAdapter.LoadStateViewHolder>() {
 

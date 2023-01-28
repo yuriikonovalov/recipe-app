@@ -6,6 +6,11 @@ import com.yuriikonovalov.recipeapp.application.entities.SearchRecipe
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * Implementation of [PagingSource] for [SearchRecipe].
+ * @property remoteSource a remote data source.
+ * @property query a query to search by.
+ */
 class SearchRecipePagingSource(
     private val remoteSource: RecipeRemoteDataSource,
     private val query: String
@@ -42,7 +47,14 @@ class SearchRecipePagingSource(
     }
 
     private companion object {
+        /**
+         * The max offset the server can handle.
+         */
         const val MAX_OFFSET = 900
+
+        /**
+         * The max limit the server can handle.
+         */
         const val MAX_LIMIT = 100
     }
 }

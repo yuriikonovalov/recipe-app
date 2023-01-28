@@ -6,6 +6,10 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigationrail.NavigationRailView
 
 
+/**
+ * This is an object that contains methods for updating navigation views
+ * depending on the current window size.
+ */
 object AdaptiveNavUtils {
     private const val MEDIUM_SCREEN_WIDTH_SIZE = 600
     private const val LARGE_SCREEN_WIDTH_SIZE = 1240

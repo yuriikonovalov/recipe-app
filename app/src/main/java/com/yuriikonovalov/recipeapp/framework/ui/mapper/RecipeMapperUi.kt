@@ -13,6 +13,9 @@ import com.yuriikonovalov.recipeapp.presentation.model.RecipeUi
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * This is a UI mapper between [RecipeUi] and [Recipe].
+ */
 class RecipeMapperUi @Inject constructor(
     @ApplicationContext private val context: Context,
     private val ingredientMapper: MapperUi<Ingredient, IngredientUi>,

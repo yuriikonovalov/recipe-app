@@ -10,6 +10,12 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+/**
+ * Implementation of [RecipeLocalDataSource].
+ *
+ * @property dao a recipe data access object.
+ * @property mapper a db mapper between [Recipe] and [AggregateRecipeDb].
+ */
 class RecipeLocalDataSourceImpl @Inject constructor(
     private val dao: RecipeDao,
     private val mapper: MapperDb<Recipe, AggregateRecipeDb>

@@ -27,6 +27,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
+/**
+ * Orchestrates dependency inject for local, remote data sources and a preference data store.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {

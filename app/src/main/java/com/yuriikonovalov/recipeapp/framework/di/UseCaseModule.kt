@@ -6,6 +6,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+/**
+ * Orchestrates dependency inject for use cases.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class UseCaseModule {

@@ -10,6 +10,11 @@ import com.yuriikonovalov.recipeapp.databinding.ItemRandomRecipeAdapterBinding
 import com.yuriikonovalov.recipeapp.presentation.model.RandomRecipeUi
 
 
+/**
+ * A custom implementation of [ListAdapter] for displaying a list of random recipes.
+ *
+ * @property onRecipeClick a function that will be called when an item of the list is clicked.
+ */
 class RandomRecipeAdapter(private val onRecipeClick: (id: Int) -> Unit) :
     ListAdapter<RandomRecipeUi, RandomRecipeAdapter.RecipeViewHolder>(diffCallback) {
 

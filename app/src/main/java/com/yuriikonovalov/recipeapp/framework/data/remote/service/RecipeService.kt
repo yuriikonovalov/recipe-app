@@ -7,6 +7,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+/**
+ * Defines the interface of request to the server. It will be used by the Retrofit library to generate requests.
+ */
 interface RecipeService {
     @GET("/recipes/random")
     suspend fun getRandomRecipes(

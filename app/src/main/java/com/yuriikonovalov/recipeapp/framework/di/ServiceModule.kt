@@ -17,6 +17,9 @@ import javax.inject.Singleton
 private const val BASE_URL = "https://api.spoonacular.com"
 private const val HEADER_API_KEY = "x-api-key"
 
+/**
+ * Orchestrates dependency inject for a remote service and http client.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {

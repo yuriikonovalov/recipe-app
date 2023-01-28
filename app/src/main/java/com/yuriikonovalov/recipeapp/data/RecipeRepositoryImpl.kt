@@ -13,6 +13,12 @@ import com.yuriikonovalov.recipeapp.data.remote.SearchRecipePagingSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+/**
+ * Implementation of [RecipeRepository].
+ * @property localDataSource a local data source.
+ * @property remoteDataSource a remote date source.
+ * @property preferenceDataStore a preference data store that provides access to app preferences.
+ */
 class RecipeRepositoryImpl @Inject constructor(
     private val localDataSource: RecipeLocalDataSource,
     private val remoteDataSource: RecipeRemoteDataSource,
