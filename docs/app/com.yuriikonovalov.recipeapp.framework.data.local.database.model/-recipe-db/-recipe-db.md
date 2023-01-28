@@ -1,0 +1,6 @@
+//[app](../../../index.md)/[com.yuriikonovalov.recipeapp.framework.data.local.database.model](../index.md)/[RecipeDb](index.md)/[RecipeDb](-recipe-db.md)
+
+# RecipeDb
+
+[androidJvm]\
+fun [RecipeDb](-recipe-db.md)(id: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), title: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, mealTypes: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[MealType](../../com.yuriikonovalov.recipeapp.application.entities/-meal-type/index.md)&gt;, instructions: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, readyInMinutes: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?, servings: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?, image: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, sourceUrl: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, vegetarian: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?, cache: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), saved: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html))

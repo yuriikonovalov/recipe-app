@@ -1,0 +1,18 @@
+//[app](../../index.md)/[com.yuriikonovalov.recipeapp.application.entities](index.md)
+
+# Package-level declarations
+
+[androidJvm]\
+Contains all of the domain entity classes of the application.
+
+## Types
+
+| Name | Summary |
+|---|---|
+| [Ingredient](-ingredient/index.md) | [androidJvm]<br>data class [Ingredient](-ingredient/index.md)(val id: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val image: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val measureUs: [Measure](-measure/index.md)?, val measureMetric: [Measure](-measure/index.md)?) |
+| [MealType](-meal-type/index.md) | [androidJvm]<br>enum [MealType](-meal-type/index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;[MealType](-meal-type/index.md)&gt; |
+| [Measure](-measure/index.md) | [androidJvm]<br>data class [Measure](-measure/index.md)(val amount: [Double](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html)?, val unitLong: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val unitShort: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?) |
+| [MeasureSystem](-measure-system/index.md) | [androidJvm]<br>sealed class [MeasureSystem](-measure-system/index.md) |
+| [Recipe](-recipe/index.md) | [androidJvm]<br>data class [Recipe](-recipe/index.md)(val id: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val title: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val mealTypes: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[MealType](-meal-type/index.md)&gt;, val ingredients: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Ingredient](-ingredient/index.md)&gt;, val instructions: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val readyInMinutes: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?, val servings: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?, val image: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val sourceUrl: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val vegetarian: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?, val cache: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), val saved: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) |
+| [SearchRecipe](-search-recipe/index.md) | [androidJvm]<br>data class [SearchRecipe](-search-recipe/index.md)(val id: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val title: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val image: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |
+| [SearchRecipeResponse](-search-recipe-response/index.md) | [androidJvm]<br>data class [SearchRecipeResponse](-search-recipe-response/index.md)(val number: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val offset: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val recipes: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[SearchRecipe](-search-recipe/index.md)&gt;, val totalRecipes: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)) |

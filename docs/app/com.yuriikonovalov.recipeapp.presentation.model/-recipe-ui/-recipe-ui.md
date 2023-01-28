@@ -1,0 +1,6 @@
+//[app](../../../index.md)/[com.yuriikonovalov.recipeapp.presentation.model](../index.md)/[RecipeUi](index.md)/[RecipeUi](-recipe-ui.md)
+
+# RecipeUi
+
+[androidJvm]\
+fun [RecipeUi](-recipe-ui.md)(id: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), image: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, title: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), servings: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, time: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, ingredients: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[IngredientUi](../-ingredient-ui/index.md)&gt;, instructions: [Spanned](https://developer.android.com/reference/kotlin/android/text/Spanned.html)?, mealTypes: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), sourceUrl: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, vegetarian: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), saved: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html))

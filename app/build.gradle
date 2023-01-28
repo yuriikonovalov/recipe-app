@@ -45,11 +45,15 @@ android {
     }
 }
 tasks.withType(DokkaTask.class) {
-    dokkaSourceSets{
+    suppressInheritedMembers.set(true)
+    outputDirectory.set(file("${rootDir}/docs"))
+    dokkaSourceSets {
         named("main") {
             // contains descriptions for the module and the packages
             includes.from(project.files(), "module.md")
             includes.from(project.files(), "packages.md")
+            skipEmptyPackages.set(true)
+
         }
     }
 }
